@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WayBuddy — I Need Travel Help</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:      #F5F0E8;
+      --ink:        #1A1410;
+      --terracotta: #C4603A;
+      --sage:       #4A6741;
+      --mist:       #E8E0D4;
+      --border:     #D4C8B8;
+      --error:      #C0392B;
+      --success:    #2E7D32;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      background: var(--ink);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--cream);
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--terracotta); }
+
+    .back-link {
+      font-size: 0.82rem;
+      color: var(--cream);
+      opacity: 0.6;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover { opacity: 1; }
+
+    /* ── HERO ── */
+    .form-hero {
+      background: var(--terracotta);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-hero::before {
+      content: '✈';
+      position: absolute;
+      font-size: 12rem;
+      opacity: 0.06;
+      top: -2rem;
+      right: -2rem;
+      line-height: 1;
+    }
+
+    .form-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.6rem;
+      line-height: 1.1;
+    }
+
+    .form-hero p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.8);
+      font-weight: 300;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── FORM CONTAINER ── */
+    .form-container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ── SECTION DIVIDERS ── */
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── FORM FIELDS ── */
+    .field-group {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 0;
+    }
+
+    .field-group.two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .field-group.three-col {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    @media (max-width: 560px) {
+      .field-group.two-col,
+      .field-group.three-col { grid-template-columns: 1fr; }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+
+    label .req {
+      color: var(--terracotta);
+      margin-left: 2px;
+    }
+
+    input, select, textarea {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.65rem 0.85rem;
+      width: 100%;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+      appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--terracotta);
+      box-shadow: 0 0 0 3px rgba(196,96,58,0.12);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #aaa;
+      font-weight: 300;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A1410' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.85rem center;
+      padding-right: 2.2rem;
+      cursor: pointer;
+    }
+
+    textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+    /* ── CHECKBOX GROUP ── */
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.5rem;
+      margin-top: 0.1rem;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .checkbox-item:hover { border-color: var(--terracotta); }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      padding: 0;
+      accent-color: var(--terracotta);
+      cursor: pointer;
+      border: none;
+      box-shadow: none;
+    }
+
+    .checkbox-item input[type="checkbox"]:focus {
+      box-shadow: none;
+      border-color: transparent;
+    }
+
+    .checkbox-item span {
+      font-size: 0.83rem;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .checkbox-item:has(input:checked) {
+      border-color: var(--terracotta);
+      background: rgba(196,96,58,0.06);
+    }
+
+    /* ── FIELD HINT ── */
+    .hint {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 0.2rem;
+    }
+
+    /* ── SUBMIT BUTTON ── */
+    .submit-area {
+      margin-top: 2.5rem;
+      text-align: center;
+    }
+
+    .submit-btn {
+      background: var(--terracotta);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 1rem 3rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .submit-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .submit-note {
+      font-size: 0.78rem;
+      color: #888;
+      margin-top: 0.75rem;
+    }
+
+    /* ── TOAST / BANNER ── */
+    .banner {
+      display: none;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .banner.success {
+      display: block;
+      background: rgba(46,125,50,0.1);
+      border: 1px solid rgba(46,125,50,0.3);
+      color: var(--success);
+    }
+
+    .banner.error {
+      display: block;
+      background: rgba(192,57,43,0.08);
+      border: 1px solid rgba(192,57,43,0.25);
+      color: var(--error);
+    }
+
+    /* ── SUCCESS SCREEN ── */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 3rem 1.5rem;
+    }
+
+    .success-screen.show { display: block; }
+
+    .success-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--sage);
+    }
+
+    .success-screen p {
+      font-size: 1rem;
+      color: #666;
+      max-width: 380px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    .home-link {
+      display: inline-block;
+      background: var(--ink);
+      color: var(--cream);
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <a href="/index.html" class="logo">Way<span>Buddy</span></a>
+  <a href="/index.html" class="back-link">← Back to home</a>
+</header>
+
+<div class="form-hero">
+  <h1>I need travel help</h1>
+  <p>Tell us about your journey and we'll match you with a volunteer helper before your flight.</p>
+</div>
+
+<div class="form-container">
+
+  <!-- SUCCESS SCREEN -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">✅</div>
+    <h2>You're registered!</h2>
+    <p>We've received your details. Our team will review your request and reach out with a matched helper before your travel date.</p>
+    <a href="/index.html" class="home-link">Back to home</a>
+  </div>
+
+  <!-- FORM -->
+  <form id="seeker-form" novalidate>
+
+    <div id="banner" class="banner"></div>
+
+    <!-- PERSONAL DETAILS -->
+    <div class="section-label">Personal details</div>
+    <div class="field-group">
+      <div class="field">
+        <label for="name">Full name <span class="req">*</span></label>
+        <input type="text" id="name" name="name" placeholder="e.g. Rahul Sharma" required/>
+      </div>
+    </div>
+
+    <div class="field-group two-col" style="margin-top:1rem">
+      <div class="field">
+        <label for="phone">Phone number <span class="req">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required/>
+      </div>
+      <div class="field">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="abc@email.com"/>
+      </div>
+    </div>
+
+    <div class="field-group two-col" style="margin-top:1rem">
+      <div class="field">
+        <label for="age">Age <span class="req">*</span></label>
+        <input type="number" id="age" name="age" min="1" max="120" placeholder="26" required/>
+      </div>
+      <div class="field">
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender">
+          <option value="">Prefer not to say</option>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+          <option value="Non-binary">Non-binary</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- FLIGHT DETAILS -->
+    <div class="section-label">Flight details</div>
+    <div class="field-group two-col">
+      <div class="field">
+        <label for="flight_number">Flight number <span class="req">*</span></label>
+        <input type="text" id="flight_number" name="flight_number" placeholder="e.g. AI 131" required/>
+      </div>
+      <div class="field">
+        <label for="departure_time">Departure time <span class="req">*</span></label>
+        <input type="time" id="departure_time" name="departure_time" required/>
+      </div>
+    </div>
+
+    <div class="field-group two-col" style="margin-top:1rem">
+      <div class="field">
+        <label for="departure_airport">Departing from <span class="req">*</span></label>
+        <input type="text" id="departure_airport" name="departure_airport" placeholder="e.g. Mumbai (BOM)" required/>
+      </div>
+      <div class="field">
+        <label for="arrival_airport">Arriving at <span class="req">*</span></label>
+        <input type="text" id="arrival_airport" name="arrival_airport" placeholder="e.g. London Heathrow (LHR)" required/>
+      </div>
+    </div>
+
+    <div class="field-group" style="margin-top:1rem">
+      <div class="field">
+        <label for="travel_date">Travel date <span class="req">*</span></label>
+        <input type="date" id="travel_date" name="travel_date" required/>
+      </div>
+    </div>
+
+    <!-- LANGUAGES -->
+    <div class="section-label">Languages spoken</div>
+    <div class="field">
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="English"/><span>English</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Hindi"/><span>Hindi</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Marathi"/><span>Marathi</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Tamil"/><span>Tamil</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Bengali"/><span>Bengali</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Malayalam"/><span>Malayalam</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Telugu"/><span>Telugu</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Kannada"/><span>Kannada</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Gujarati"/><span>Gujarati</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Punjabi"/><span>Punjabi</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Arabic"/><span>Arabic</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="languages" value="Other"/><span>Other</span></label>
+      </div>
+    </div>
+
+    <!-- HELP NEEDED -->
+    <div class="section-label">What kind of help do you need?</div>
+    <div class="field">
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Wheelchair assistance"/><span>Wheelchair assistance</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Airport navigation"/><span>Airport navigation</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Language translation"/><span>Language translation</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Immigration and forms"/><span>Immigration and forms</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Elderly assistance"/><span>Elderly assistance</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Security help"/><span>Security help</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Boarding gate help"/><span>Boarding gate help</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="General companionship"/><span>General companionship</span></label>
+      </div>
+    </div>
+
+    <!-- ADDITIONAL NOTES -->
+    <div class="section-label">Anything else we should know?</div>
+    <div class="field">
+      <textarea id="notes" name="notes" placeholder="Tell us more about your situation, any specific concerns, or anything that would help us find the right match for you..."></textarea>
+      <span class="hint">Optional — but the more detail you share, the better we can match you.</span>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <button type="submit" class="submit-btn" id="submit-btn">
+        Submit my request →
+      </button>
+      <p class="submit-note">Your information is kept private and only shared with your matched helper.</p>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  // ── SET MIN DATE TO TODAY ──────────────────────────────────
+  // Prevents selecting a past travel date
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('travel_date').setAttribute('min', today);
+
+  // ── FORM SUBMISSION ───────────────────────────────────────
+  document.getElementById('seeker-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn    = document.getElementById('submit-btn');
+    const banner = document.getElementById('banner');
+
+    // Reset banner
+    banner.className = 'banner';
+    banner.textContent = '';
+
+    // ── COLLECT FORM DATA ──────────────────────────────────
+    const data = {
+      name:              document.getElementById('name').value.trim(),
+      phone:             document.getElementById('phone').value.trim(),
+      email:             document.getElementById('email').value.trim(),
+      age:               document.getElementById('age').value.trim(),
+      gender:            document.getElementById('gender').value,
+      flight_number:     document.getElementById('flight_number').value.trim(),
+      departure_airport: document.getElementById('departure_airport').value.trim(),
+      arrival_airport:   document.getElementById('arrival_airport').value.trim(),
+      travel_date:       document.getElementById('travel_date').value,
+      departure_time:    document.getElementById('departure_time').value,
+      notes:             document.getElementById('notes').value.trim(),
+    };
+
+    // Collect checked checkboxes
+    const languages = [...document.querySelectorAll('input[name="languages"]:checked')]
+      .map(cb => cb.value).join(', ');
+    const help_needed = [...document.querySelectorAll('input[name="help_needed"]:checked')]
+      .map(cb => cb.value).join(', ');
+
+    data.languages  = languages;
+    data.help_needed = help_needed;
+
+    // ── CLIENT-SIDE VALIDATION ─────────────────────────────
+    const required = ['name','phone','age','flight_number','departure_airport','arrival_airport','travel_date','departure_time'];
+    const missing  = required.filter(f => !data[f]);
+
+    if (missing.length > 0) {
+      banner.className = 'banner error';
+      banner.textContent = 'Please fill in all required fields: ' + missing.map(f => f.replace(/_/g,' ')).join(', ') + '.';
+      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // ── SUBMIT TO FLASK API ────────────────────────────────
+    btn.disabled    = true;
+    btn.textContent = 'Submitting…';
+
+    try {
+      const res = await fetch('/api/register/seeker', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        // Show success screen, hide form
+        document.getElementById('seeker-form').style.display = 'none';
+        document.getElementById('success-screen').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        banner.className = 'banner error';
+        banner.textContent = result.error || 'Something went wrong. Please try again.';
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        btn.disabled    = false;
+        btn.textContent = 'Submit my request →';
+      }
+
+    } catch (err) {
+      banner.className = 'banner error';
+      banner.textContent = 'Could not connect to the server. Please check your connection and try again.';
+      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      btn.disabled    = false;
+      btn.textContent = 'Submit my request →';
+    }
+  });
+</script>
+</body>
+</html>

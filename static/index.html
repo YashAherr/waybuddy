@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WayBuddy — Travel Together</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F5F0E8;
+      --ink: #1A1410;
+      --terracotta: #C4603A;
+      --sage: #4A6741;
+      --gold: #D4A843;
+      --mist: #E8E0D4;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.5;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      mix-blend-mode: multiply;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--terracotta); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .nav-links a:hover { opacity: 1; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 4rem 4rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 2rem;
+      height: 1px;
+      background: var(--terracotta);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 5vw, 5rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--terracotta);
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--ink);
+      opacity: 0.7;
+      max-width: 38ch;
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── CTA BUTTONS ── */
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 380px;
+    }
+
+    .cta-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-bottom: 0.25rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.75rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-solo {
+      background: var(--terracotta);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(196,96,58,0.3);
+    }
+
+    .btn-solo:hover {
+      box-shadow: 0 8px 32px rgba(196,96,58,0.45);
+    }
+
+    .btn-helper {
+      background: var(--sage);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(74,103,65,0.25);
+    }
+
+    .btn-helper:hover {
+      box-shadow: 0 8px 32px rgba(74,103,65,0.4);
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .btn-content { text-align: left; }
+    .btn-title { font-size: 1rem; font-weight: 500; }
+    .btn-sub { font-size: 0.78rem; opacity: 0.75; margin-top: 0.15rem; }
+
+    /* ── HERO RIGHT ── */
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 60% 40%, rgba(212,168,67,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 30% 80%, rgba(196,96,58,0.08) 0%, transparent 50%);
+    }
+
+    .map-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(26,20,16,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,20,16,0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* SVG decorative flight paths */
+    .flight-paths {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .stat-card {
+      position: absolute;
+      background: white;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 8px 32px rgba(26,20,16,0.1);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .stat-card.top {
+      top: 22%;
+      right: 15%;
+      animation: floatA 6s ease-in-out infinite;
+    }
+
+    .stat-card.mid {
+      top: 55%;
+      left: 8%;
+      animation: floatB 7s ease-in-out infinite;
+    }
+
+    .stat-card.bot {
+      bottom: 18%;
+      right: 12%;
+      animation: floatA 8s ease-in-out infinite 1s;
+    }
+
+    @keyframes floatA {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes floatB {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .stat-desc {
+      font-size: 0.72rem;
+      color: var(--ink);
+      opacity: 0.5;
+      margin-top: 0.1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .route-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--ink);
+    }
+
+    .route-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--terracotta);
+    }
+
+    .route-line {
+      flex: 1;
+      height: 1px;
+      background: repeating-linear-gradient(90deg, var(--ink) 0, var(--ink) 4px, transparent 4px, transparent 8px);
+      opacity: 0.3;
+      width: 40px;
+    }
+
+    .plane-icon { font-size: 1rem; }
+
+    /* ── HOW IT WORKS ── */
+    .how {
+      padding: 6rem 4rem;
+      background: var(--ink);
+      color: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .how::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--terracotta), var(--gold), var(--sage));
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--terracotta);
+      opacity: 0.3;
+      line-height: 1;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 400;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .step {
+      padding: 2rem;
+      border: 1px solid rgba(245,240,232,0.1);
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .step h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 0.75rem;
+    }
+
+    .step p {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      opacity: 0.55;
+      font-weight: 300;
+    }
+
+    .step-icon {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 2rem 4rem;
+      border-top: 1px solid rgba(245,240,232,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      opacity: 0.5;
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,20,16,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--cream);
+      border-radius: 16px;
+      padding: 2.5rem;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal p {
+      font-size: 0.9rem;
+      opacity: 0.65;
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
+    }
+
+    .modal-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .modal-btn {
+      padding: 0.9rem 1.5rem;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+
+    .modal-btn-primary {
+      background: var(--terracotta);
+      color: #fff;
+    }
+
+    .modal-btn-secondary {
+      background: var(--mist);
+      color: var(--ink);
+    }
+
+    .modal-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.4;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.25s; }
+    .delay-3 { animation-delay: 0.4s; }
+    .delay-4 { animation-delay: 0.55s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      nav { padding: 1.25rem 1.5rem; }
+      .hero-left { padding: 7rem 1.5rem 3rem; }
+      .how { padding: 4rem 1.5rem; }
+      .steps { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Way<span>Buddy</span></a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="dashboard.html">Admin</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="eyebrow fade-up">Airport Companion Matching</p>
+    <h1 class="fade-up delay-1">
+      No one should navigate airports <em>alone.</em>
+    </h1>
+    <p class="hero-desc fade-up delay-2">
+      WayBuddy connects solo travellers with experienced helpers — frequent flyers, airport staff, and kind strangers — who volunteer their time to make travel less daunting.
+    </p>
+
+    <div class="cta-group fade-up delay-3">
+      <p class="cta-label">I am a —</p>
+
+      <!-- SOLO TRAVELLER BUTTON -->
+      <a href="#" class="btn btn-solo" onclick="openModal('solo'); return false;">
+        <div class="btn-content">
+          <div class="btn-title">Solo Traveller</div>
+          <div class="btn-sub">I need help navigating the airport</div>
+        </div>
+        <div class="btn-icon">✈️</div>
+      </a>
+
+      <!-- HELPER BUTTON -->
+      <a href="#" class="btn btn-helper" onclick="openModal('helper'); return false;">
+        <div class="btn-content">
+          <div class="btn-title">Volunteer Helper</div>
+          <div class="btn-sub">I want to help someone travel safely</div>
+        </div>
+        <div class="btn-icon">🤝</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- DECORATIVE RIGHT PANEL -->
+  <div class="hero-right">
+    <div class="map-bg"></div>
+    <div class="map-grid"></div>
+
+    <svg class="flight-paths" viewBox="0 0 600 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 580 Q200 300 450 120" stroke="#C4603A" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.3"/>
+      <path d="M100 650 Q320 400 550 200" stroke="#D4A843" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.2"/>
+      <path d="M20 400 Q250 350 500 80" stroke="#4A6741" stroke-width="1" stroke-dasharray="4 6" opacity="0.2"/>
+      <!-- dots at ends -->
+      <circle cx="50" cy="580" r="4" fill="#C4603A" opacity="0.5"/>
+      <circle cx="450" cy="120" r="4" fill="#C4603A" opacity="0.5"/>
+      <circle cx="100" cy="650" r="4" fill="#D4A843" opacity="0.4"/>
+      <circle cx="550" cy="200" r="4" fill="#D4A843" opacity="0.4"/>
+    </svg>
+
+    <!-- Floating stat cards -->
+    <div class="stat-card top">
+      <div class="route-pill">
+        <div class="route-dot"></div>
+        <div class="route-line"></div>
+        <span class="plane-icon">✈</span>
+        <div class="route-line"></div>
+        <div class="route-dot" style="background:var(--sage)"></div>
+      </div>
+      <div style="margin-top:0.6rem">
+        <span style="font-size:0.78rem; font-weight:500;">BOM → LHR</span>
+        <div class="stat-desc">matched 2 hrs before departure</div>
+      </div>
+    </div>
+
+    <div class="stat-card mid">
+      <div class="stat-num">240+</div>
+      <div class="stat-desc">Successful Matches</div>
+    </div>
+
+    <div class="stat-card bot">
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.9rem;">J</div>
+        <div>
+          <div style="font-size:0.82rem;font-weight:500;">Priya matched!</div>
+          <div class="stat-desc">Helper: James · T2 → T5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <h2 class="section-title">How it works</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">STEP 01</div>
+      <div class="step-icon">📋</div>
+      <h3>Register your trip</h3>
+      <p>Fill out a quick form with your flight details, arrival time, and what kind of support you need — or can offer.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">STEP 02</div>
+      <div class="step-icon">🔍</div>
+      <h3>We review & match</h3>
+      <p>Our team reviews all profiles and manually pairs compatible travellers and helpers based on timing, terminal, and need.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">STEP 03</div>
+      <div class="step-icon">✅</div>
+      <h3>Connect & travel</h3>
+      <p>Both parties are notified with each other's details. Meet at the agreed point and navigate the airport together.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 WayBuddy. Built with care.</span>
+  <span>All data is handled securely and never shared without consent.</span>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+  // ── REPLACE THESE WITH YOUR ACTUAL GOOGLE FORM LINKS ──
+  const FORM_LINKS = {
+    solo:   'http://13.233.47.212/seeker-form.html',
+    helper: 'http://13.233.47.212/helper-form.html'
+  };
+
+  function openModal(type) {
+    const isSolo = type === 'solo';
+    document.getElementById('modal-content').innerHTML = `
+      <h2>${isSolo ? '✈️ I Need Help' : '🤝 I Want to Help'}</h2>
+      <p>${isSolo
+        ? "You'll fill out a short form with your flight details and what kind of support you need. Our team will reach out with a match before your travel date."
+        : "You'll share your availability, airport experience, and travel schedule. We'll match you with a traveller who needs support on the same day."
+      }</p>
+      <div class="modal-btns">
+        <a href="${FORM_LINKS[type]}" target="_blank" class="modal-btn modal-btn-primary">
+          Open Registration Form →
+        </a>
+        <button class="modal-btn modal-btn-secondary" onclick="closeModalDirect()">
+          Maybe later
+        </button>
+      </div>
+    `;
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal(e) {
+    if (e.target.id === 'modal') closeModalDirect();
+  }
+
+  function closeModalDirect() {
+    document.getElementById('modal').classList.remove('open');
+  }
+</script>
+</body>
+</html>
