@@ -517,7 +517,6 @@
       departure_airport: document.getElementById('departure_airport').value.trim(),
       arrival_airport:   document.getElementById('arrival_airport').value.trim(),
       travel_date:       document.getElementById('travel_date').value,
-      departure_time:    document.getElementById('departure_time').value,
       notes:             document.getElementById('notes').value.trim(),
     };
 
@@ -531,7 +530,7 @@
     data.help_needed = help_needed;
 
     // ── CLIENT-SIDE VALIDATION ─────────────────────────────
-    const required = ['name','phone','age','flight_number','departure_airport','arrival_airport','travel_date','departure_time'];
+    const required = ['name','phone','age','flight_number','departure_airport','arrival_airport','travel_date'];
     const missing  = required.filter(f => !data[f]);
 
     if (missing.length > 0) {
