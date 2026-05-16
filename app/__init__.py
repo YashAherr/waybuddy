@@ -16,6 +16,8 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-change-in-production')
+    from datetime import timedelta
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 
     CORS(app)
     db.init_app(app)
@@ -49,6 +51,7 @@ def create_app():
             data = request.get_json()
             if data and data.get('username') == ADMIN_USERNAME and data.get('password') == ADMIN_PASSWORD:
                 session['admin'] = True
+		session.permanent = True
                 return jsonify({'success': True})
             return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
         return send_from_directory(app.static_folder, 'login.html')
