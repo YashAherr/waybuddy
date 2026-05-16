@@ -709,11 +709,7 @@ function renderCards(type, data) {
       : selectedHelper?.id === p.id;
     const isMatched = matchedIds.has(p.id);
     const cls = isMatched ? 'matched' : (isSelected ? (type === 'solo' ? 'selected-solo' : 'selected-helper') : '');
-    const rawTags = type === 'solo' ? (p.help_needed || []) : (p.skills || []);
-    const tags = Array.isArray(rawTags) ? rawTags : (rawTags ? rawTags.split(',').map(t => t.trim()).filter(Boolean) : []);
-    const rawLangs = p.languages || [];
-    const langs = Array.isArray(rawLangs) ? rawLangs : (rawLangs ? rawLangs.split(',').map(l => l.trim()).filter(Boolean) : []);
-    const route = (p.departure_airport || '') + ' -> ' + (p.arrival_airport || '');
+    const tags = type === 'solo' ? p.needs : p.skills;
     const avatarCls = type === 'solo' ? 'avatar-solo' : 'avatar-helper';
 
     return `
@@ -722,20 +718,20 @@ function renderCards(type, data) {
           <div class="avatar ${avatarCls}">${p.name[0]}</div>
           <div>
             <div class="card-name">${p.name}</div>
-            <div class="card-meta">${p.age} · ${p.gender} · ${langs.join(', ')}</div>
+            <div class="card-meta">${p.age} · ${p.gender} · ${p.languages.join(', ')}</div>
           </div>
           ${isMatched ? '<div class="badge badge-ok" style="margin-left:auto;font-size:0.65rem;">matched</div>' : ''}
         </div>
         <div class="card-tags">
-          <span class="tag flight">${p.flight_number || ""}</span>
-          <span class="tag flight">${route}</span>
-          <span class="tag flight">${p.travel_date || ""}</span>
+          <span class="tag flight">${p.flight}</span>
+          <span class="tag flight">${p.route}</span>
+          <span class="tag flight">${p.date}</span>
           ${tags.map(t => `<span class="tag need">${t}</span>`).join('')}
-          ${langs.map(l => `<span class="tag lang">${l}</span>`).join('')}
+          ${p.languages.map(l => `<span class="tag lang">${l}</span>`).join('')}
         </div>
-        ${p.notes ? `<div style="margin-top:0.6rem;font-size:0.75rem;color:var(--muted);line-height:1.4;">"${p.notes}"</div>` : ''}
+        ${p.note ? `<div style="margin-top:0.6rem;font-size:0.75rem;color:var(--muted);line-height:1.4;">"${p.note}"</div>` : ''}
         <div class="card-footer">
-          <span class="card-date">${p.departure_time || ''} · ${p.travel_date || ""}</span>
+          <span class="card-date">${p.time} · ${p.date}</span>
           <div class="status-dot ${isMatched ? 'status-matched' : 'status-pending'}"></div>
         </div>
       </div>`;
@@ -747,8 +743,9 @@ function filterCards(type, query) {
   const q = query.toLowerCase();
   const filtered = data.filter(p =>
     p.name.toLowerCase().includes(q) ||
-    p.flight_number && p.flight_number.toLowerCase().includes(q) ||
-    (type === 'solo' ? p.help_needed : p.skills).some(t => t.toLowerCase().includes(q))
+    p.flight.toLowerCase().includes(q) ||
+    p.route.toLowerCase().includes(q) ||
+    (type === 'solo' ? p.needs : p.skills).some(t => t.toLowerCase().includes(q))
   );
   renderCards(type, filtered);
 }
