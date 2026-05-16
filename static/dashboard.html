@@ -269,10 +269,12 @@ async function fetchData(){
     SEEKERS=sd.seekers||[];
     HELPERS=hd.helpers||[];
     document.getElementById('last-fetched').textContent='Last refreshed: '+new Date().toLocaleTimeString();
+    await fetchExistingMatches();
     renderCards('solo',SEEKERS);
     renderCards('helper',HELPERS);
-    await fetchExistingMatches();
-    showToast('Loaded '+SEEKERS.length+' seekers, '+HELPERS.length+' helpers');
+    var visibleSeekers=SEEKERS.filter(function(s){return!matchedSeekerIds.has(s.id);}).length;
+    var visibleHelpers=HELPERS.filter(function(h){return!matchedHelperIds.has(h.id);}).length;
+    showToast('Loaded '+visibleSeekers+' seekers, '+visibleHelpers+' helpers');
   }catch(err){
     showError(err.message);
     console.error('WayBuddy API error:',err);
