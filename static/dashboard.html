@@ -709,7 +709,11 @@ function renderCards(type, data) {
       : selectedHelper?.id === p.id;
     const isMatched = matchedIds.has(p.id);
     const cls = isMatched ? 'matched' : (isSelected ? (type === 'solo' ? 'selected-solo' : 'selected-helper') : '');
-    const tags = type === 'solo' ? p.help_needed : p.skills;
+    const rawTags = type === 'solo' ? (p.help_needed || []) : (p.skills || []);
+    const tags = Array.isArray(rawTags) ? rawTags : (rawTags ? rawTags.split(',').map(t => t.trim()).filter(Boolean) : []);
+    const rawLangs = p.languages || [];
+    const langs = Array.isArray(rawLangs) ? rawLangs : (rawLangs ? rawLangs.split(',').map(l => l.trim()).filter(Boolean) : []);
+    const route = (p.departure_airport || '') + ' -> ' + (p.arrival_airport || '');
     const avatarCls = type === 'solo' ? 'avatar-solo' : 'avatar-helper';
 
     return `
