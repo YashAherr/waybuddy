@@ -1,5 +1,5 @@
-import os
-from flask import Flask, send_from_directory
+﻿import os
+from flask import Flask, send_from_directory, redirect
 from flask_cors import CORS
 from .models import db
 
@@ -36,16 +36,32 @@ def create_app():
     def index():
         return send_from_directory(app.static_folder, 'index.html')
 
+    @app.route('/index.html')
+    def index_redirect():
+        return redirect('/', 301)
+
     @app.route('/dashboard')
     def dashboard():
         return send_from_directory(app.static_folder, 'dashboard.html')
 
-    @app.route('/seeker-form.html')
+    @app.route('/dashboard.html')
+    def dashboard_redirect():
+        return redirect('/dashboard', 301)
+
+    @app.route('/seeker-form')
     def seeker_form():
         return send_from_directory(app.static_folder, 'seeker-form.html')
 
-    @app.route('/helper-form.html')
+    @app.route('/seeker-form.html')
+    def seeker_form_redirect():
+        return redirect('/seeker-form', 301)
+
+    @app.route('/helper-form')
     def helper_form():
         return send_from_directory(app.static_folder, 'helper-form.html')
+
+    @app.route('/helper-form.html')
+    def helper_form_redirect():
+        return redirect('/helper-form', 301)
 
     return app
