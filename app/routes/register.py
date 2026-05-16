@@ -76,7 +76,7 @@ def register_seeker():
             languages         = data.get('languages', '').strip() or None,
             help_needed       = data.get('help_needed', '').strip() or None,
             notes             = data.get('notes', '').strip() or None,
-            status            = 'pending',
+            status            = 'approved',
             is_paid           = False,
         )
         db.session.add(seeker)
