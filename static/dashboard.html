@@ -263,7 +263,7 @@ function setLoading(on){
 async function fetchData(){
   setLoading(true);
   try{
-    var sr=await fetch('/api/admin/seekers?status=approved');
+    var sr=await fetch('/api/admin/seekers');
     var hr=await fetch('/api/admin/helpers');
     var sd=await sr.json(),hd=await hr.json();
     SEEKERS=sd.seekers||[];

@@ -208,7 +208,7 @@ def unmatch():
         seeker = Seeker.query.get(match.seeker_id)
         helper = Helper.query.get(match.helper_id)
 
-        if seeker: seeker.status = 'pending'
+        if seeker: seeker.status = 'approved'
         if helper: helper.status = 'approved'
 
         db.session.delete(match)
