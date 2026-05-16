@@ -232,7 +232,7 @@
 <div id="toast"></div>
 
 <script>
-var SEEKERS=[],HELPERS=[],selectedSolo=null,selectedHelper=null,confirmedMatches=[],matchedIds=new Set();
+var SEEKERS=[],HELPERS=[],selectedSolo=null,selectedHelper=null,confirmedMatches=[],matchedSeekerIds=new Set(),matchedHelperIds=new Set();
 
 function showSection(name,btn){
   document.querySelectorAll('[id^="section-"]').forEach(function(s){s.style.display='none';});
@@ -285,7 +285,7 @@ async function fetchExistingMatches(){
     var data=await res.json();
     if(!data.success)return;
     confirmedMatches=(data.matches||[]).map(function(m){return{id:m.id,seeker:{id:m.seeker_id,name:m.seeker_name||'Seeker #'+m.seeker_id,flight_number:'',travel_date:''},helper:{id:m.helper_id,name:m.helper_name||'Helper #'+m.helper_id}};});
-    (data.matches||[]).forEach(function(m){matchedIds.add(m.seeker_id);matchedIds.add(m.helper_id);});
+    (data.matches||[]).forEach(function(m){matchedSeekerIds.add(m.seeker_id);matchedHelperIds.add(m.helper_id);});
     renderMatches();
     updateStats();
   }catch(e){console.error('Failed to load matches:',e);}
@@ -312,11 +312,11 @@ function getTags(p,type){
 function renderCards(type,data){
   var listEl=document.getElementById(type==='solo'?'seeker-list':'helper-list');
   var countEl=document.getElementById(type==='solo'?'seeker-count':'helper-count');
-  countEl.textContent=data.filter(function(d){return!matchedIds.has(d.id);}).length;
+  countEl.textContent=data.filter(function(d){return type==="solo"?!matchedSeekerIds.has(d.id):!matchedHelperIds.has(d.id);}).length;
   if(!data.length){listEl.innerHTML='<div class="empty">No profiles found.</div>';return;}
   listEl.innerHTML=data.map(function(p){
     var isSelected=type==='solo'?(selectedSolo&&selectedSolo.id===p.id):(selectedHelper&&selectedHelper.id===p.id);
-    var isMatched=matchedIds.has(p.id);
+    var isMatched=type==="solo"?matchedSeekerIds.has(p.id):matchedHelperIds.has(p.id);
     var cls=isMatched?'matched':(isSelected?(type==='solo'?'selected-solo':'selected-helper'):'');
     var tags=getTags(p,type);
     var langs=getLangs(p);
@@ -353,7 +353,7 @@ function selectCard(type,id){
   var numId=Number(id);
   var pool=type==='solo'?SEEKERS:HELPERS;
   var person=pool.find(function(p){return p.id===numId;});
-  if(!person||matchedIds.has(numId))return;
+  if(!person||(type==="solo"?matchedSeekerIds.has(numId):matchedHelperIds.has(numId)))return;
   if(type==='solo')selectedSolo=(selectedSolo&&selectedSolo.id===numId)?null:person;
   else selectedHelper=(selectedHelper&&selectedHelper.id===numId)?null:person;
   renderCards('solo',SEEKERS);renderCards('helper',HELPERS);updatePreview();
@@ -392,7 +392,7 @@ async function createMatch(){
     var data=await res.json();
     if(!data.success){showToast('Error: '+data.error);btn.disabled=false;btn.textContent='Confirm Match';return;}
     confirmedMatches.push({id:data.match.id,seeker:Object.assign({},selectedSolo),helper:Object.assign({},selectedHelper)});
-    matchedIds.add(selectedSolo.id);matchedIds.add(selectedHelper.id);
+    matchedSeekerIds.add(selectedSolo.id);matchedHelperIds.add(selectedHelper.id);
     showToast('Matched '+selectedSolo.name+' with '+selectedHelper.name);
     selectedSolo=null;selectedHelper=null;
     renderCards('solo',SEEKERS);renderCards('helper',HELPERS);updatePreview();renderMatches();updateStats();
@@ -431,7 +431,7 @@ async function unmatch(index){
     var data=await res.json();
     if(!data.success){showToast('Error: '+data.error);return;}
     confirmedMatches.splice(index,1);
-    matchedIds.delete(m.seeker.id);matchedIds.delete(m.helper.id);
+    matchedSeekerIds.delete(m.seeker.id);matchedHelperIds.delete(m.helper.id);
     await fetchData();
     showToast('Match removed. Both parties are back in the pool.');
   }catch(err){showToast('Network error: '+err.message);}
@@ -464,7 +464,7 @@ async function approveHelper(helperId,btn){
 
 function updateStats(){
   var pendingApprovals=document.querySelectorAll('#pending-helpers-list .matched-pair').length;
-  var totalPending=SEEKERS.filter(function(s){return!matchedIds.has(s.id);}).length+pendingApprovals;
+  var totalPending=SEEKERS.filter(function(s){return!matchedSeekerIds.has(s.id);}).length+pendingApprovals;
   document.getElementById('stat-seekers').textContent=SEEKERS.length;
   document.getElementById('stat-helpers').textContent=HELPERS.length;
   document.getElementById('stat-matched').textContent=confirmedMatches.length;
@@ -516,7 +516,7 @@ async function loadAllMatches(){
 async function removeMatchFromTable(matchId,seekerId,helperId){
   var res=await fetch('/api/admin/unmatch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({match_id:matchId})});
   var data=await res.json();
-  if(data.success){matchedIds.delete(seekerId);matchedIds.delete(helperId);showToast('Match removed.');await fetchData();loadAllMatches();}
+  if(data.success){matchedSeekerIds.delete(seekerId);matchedHelperIds.delete(helperId);showToast('Match removed.');await fetchData();loadAllMatches();}
   else showToast('Error: '+data.error);
 }
 
