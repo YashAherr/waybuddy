@@ -1,6 +1,7 @@
-﻿import os
+import os
 from flask import Flask, send_from_directory, redirect, request, session, jsonify
 from flask_cors import CORS
+from datetime import timedelta
 from .models import db
 
 
@@ -16,7 +17,6 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-change-in-production')
-    from datetime import timedelta
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 
     CORS(app)
@@ -50,8 +50,8 @@ def create_app():
         if request.method == 'POST':
             data = request.get_json()
             if data and data.get('username') == ADMIN_USERNAME and data.get('password') == ADMIN_PASSWORD:
+                session.permanent = True
                 session['admin'] = True
-		session.permanent = True
                 return jsonify({'success': True})
             return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
         return send_from_directory(app.static_folder, 'login.html')
