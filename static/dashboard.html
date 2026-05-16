@@ -314,6 +314,7 @@ function renderCards(type,data){
   var countEl=document.getElementById(type==='solo'?'seeker-count':'helper-count');
   countEl.textContent=data.filter(function(d){return type==="solo"?!matchedSeekerIds.has(d.id):!matchedHelperIds.has(d.id);}).length;
   if(!data.length){listEl.innerHTML='<div class="empty">No profiles found.</div>';return;}
+  data=data.filter(function(p){return type==='solo'?!matchedSeekerIds.has(p.id):!matchedHelperIds.has(p.id);});
   listEl.innerHTML=data.map(function(p){
     var isSelected=type==='solo'?(selectedSolo&&selectedSolo.id===p.id):(selectedHelper&&selectedHelper.id===p.id);
     var isMatched=type==="solo"?matchedSeekerIds.has(p.id):matchedHelperIds.has(p.id);
