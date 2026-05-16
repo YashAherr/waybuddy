@@ -7,884 +7,553 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:       #0F1117;
-      --surface:  #181B24;
-      --border:   #262B38;
-      --text:     #E8EAF0;
-      --muted:    #6B7280;
-      --terracotta: #E07A56;
-      --sage:     #5B8A51;
-      --gold:     #D4A843;
-      --blue:     #4A90D9;
-      --red:      #D94A4A;
+      --bg: #0F1117; --surface: #181B24; --border: #262B38;
+      --text: #E8EAF0; --muted: #6B7280;
+      --terracotta: #E07A56; --sage: #5B8A51; --gold: #D4A843;
+      --blue: #4A90D9; --red: #D94A4A;
     }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── LAYOUT ── */
-    .layout {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      min-height: 100vh;
-    }
-
-    /* ── SIDEBAR ── */
-    .sidebar {
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 1.5rem 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-    }
-
-    .sidebar-logo {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 600;
-      padding: 0 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 1rem;
-    }
-
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .layout { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+    .sidebar { background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.5rem 0; position: sticky; top: 0; height: 100vh; }
+    .sidebar-logo { font-size: 1.1rem; font-weight: 600; padding: 0 1.25rem 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
     .sidebar-logo span { color: var(--terracotta); }
-
-    .sidebar-label {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 0.5rem 1.25rem 0.25rem;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.6rem 1.25rem;
-      font-size: 0.88rem;
-      cursor: pointer;
-      border-radius: 0;
-      transition: background 0.15s;
-      color: var(--muted);
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-    }
-
+    .sidebar-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 0.5rem 1.25rem 0.25rem; }
+    .nav-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1.25rem; font-size: 0.88rem; cursor: pointer; color: var(--muted); border: none; background: none; width: 100%; text-align: left; transition: background 0.15s; }
     .nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
     .nav-item.active { background: rgba(224,122,86,0.12); color: var(--terracotta); font-weight: 500; }
     .nav-item .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-
-    .sidebar-footer {
-      margin-top: auto;
-      padding: 1rem 1.25rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    /* ── MAIN ── */
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid var(--border); font-size: 0.78rem; color: var(--muted); }
     .main { overflow-x: hidden; }
-
-    /* ── TOPBAR ── */
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .topbar h1 { font-size: 1rem; font-weight: 600; }
-    .topbar-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
-
+    .topbar { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
     .topbar-actions { display: flex; gap: 0.75rem; align-items: center; }
-
-    .badge {
-      font-size: 0.7rem;
-      padding: 0.2rem 0.55rem;
-      border-radius: 999px;
-      font-weight: 500;
-      font-family: 'IBM Plex Mono', monospace;
-    }
-
+    .badge { font-size: 0.7rem; padding: 0.2rem 0.55rem; border-radius: 999px; font-weight: 500; font-family: 'IBM Plex Mono', monospace; }
     .badge-warn { background: rgba(212,168,67,0.15); color: var(--gold); }
     .badge-ok { background: rgba(91,138,81,0.15); color: var(--sage); }
-
-    /* ── STATS ROW ── */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .stat-box {
-      background: var(--bg);
-      padding: 1.25rem 2rem;
-    }
-
-    .stat-box .val {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 1.8rem;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .stat-box .lbl {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 0.2rem;
-    }
-
-    .stat-box .delta {
-      font-size: 0.7rem;
-      margin-top: 0.3rem;
-    }
-
+    .refresh-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.4rem 0.9rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; cursor: pointer; }
+    .last-fetched { font-size: 0.72rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
+    .stat-box { background: var(--bg); padding: 1.25rem 2rem; }
+    .stat-box .val { font-family: 'IBM Plex Mono', monospace; font-size: 1.8rem; font-weight: 500; }
+    .stat-box .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+    .stat-box .delta { font-size: 0.7rem; margin-top: 0.3rem; }
     .delta-up { color: var(--sage); }
-    .delta-down { color: var(--red); }
-
-    /* ── CONTENT ── */
     .content { padding: 2rem; }
-
-    .section-title {
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    /* ── MATCHING ARENA ── */
-    .match-arena {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
-
-    .panel-title {
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-weight: 500;
-    }
-
-    .count-badge {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.7rem;
-      padding: 0.15rem 0.5rem;
-      border-radius: 4px;
-    }
-
+    .section-title { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .match-arena { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.5rem; align-items: start; }
+    .panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .panel-title { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; }
+    .count-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; }
     .count-badge.seeker { background: rgba(224,122,86,0.15); color: var(--terracotta); }
     .count-badge.helper { background: rgba(91,138,81,0.15); color: var(--sage); }
-
     .card-list { display: flex; flex-direction: column; gap: 0.6rem; }
-
-    /* ── PROFILE CARD ── */
-    .profile-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      user-select: none;
-      position: relative;
-    }
-
+    .profile-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; transition: border-color 0.15s; user-select: none; }
     .profile-card:hover { border-color: var(--muted); }
     .profile-card.selected-solo { border-color: var(--terracotta); background: rgba(224,122,86,0.06); }
     .profile-card.selected-helper { border-color: var(--sage); background: rgba(91,138,81,0.06); }
     .profile-card.matched { opacity: 0.35; pointer-events: none; }
-
-    .card-top {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-    }
-
+    .card-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; flex-shrink: 0; }
     .avatar-solo { background: rgba(224,122,86,0.2); color: var(--terracotta); }
     .avatar-helper { background: rgba(91,138,81,0.2); color: var(--sage); }
-
     .card-name { font-size: 0.9rem; font-weight: 500; }
     .card-meta { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
-
-    .card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-    }
-
-    .tag {
-      font-size: 0.68rem;
-      padding: 0.15rem 0.5rem;
-      border-radius: 3px;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: 'IBM Plex Mono', monospace;
-    }
-
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .tag { font-size: 0.68rem; padding: 0.15rem 0.5rem; border-radius: 3px; border: 1px solid var(--border); color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
     .tag.flight { color: var(--blue); border-color: rgba(74,144,217,0.3); }
     .tag.need { color: var(--gold); border-color: rgba(212,168,67,0.3); }
     .tag.lang { color: var(--muted); }
-
-    .card-footer {
-      margin-top: 0.75rem;
-      padding-top: 0.6rem;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
+    .card-footer { margin-top: 0.75rem; padding-top: 0.6rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
     .card-date { font-size: 0.7rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
-
-    .status-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-    }
-
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
     .status-pending { background: var(--gold); }
     .status-matched { background: var(--sage); }
-
-    /* ── MATCH COLUMN ── */
-    .match-col {
-      width: 180px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      padding-top: 2.5rem;
-    }
-
-    .match-col .icon {
-      font-size: 1.5rem;
-      opacity: 0.3;
-    }
-
-    .match-btn {
-      background: var(--terracotta);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 0.75rem 1.25rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      width: 100%;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-
-    .match-btn:disabled { opacity: 0.25; cursor: not-allowed; transform: none; }
-    .match-btn:not(:disabled):hover { opacity: 0.85; transform: translateY(-1px); }
-
-    .match-preview {
-      background: var(--surface);
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-      width: 100%;
-      text-align: center;
-      font-size: 0.78rem;
-      color: var(--muted);
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .match-preview.ready {
-      border-color: var(--terracotta);
-      color: var(--text);
-    }
-
+    .match-col { width: 180px; display: flex; flex-direction: column; align-items: center; gap: 1rem; padding-top: 2.5rem; }
+    .match-btn { background: var(--terracotta); color: #fff; border: none; border-radius: 6px; padding: 0.75rem 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+    .match-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+    .match-btn:not(:disabled):hover { opacity: 0.85; }
+    .match-preview { background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; padding: 1rem; width: 100%; text-align: center; font-size: 0.78rem; color: var(--muted); min-height: 80px; display: flex; align-items: center; justify-content: center; }
+    .match-preview.ready { border-color: var(--terracotta); color: var(--text); }
     .match-preview-content { line-height: 1.5; }
     .match-preview-content strong { color: var(--terracotta); }
-    .match-preview-content .plus { font-size: 1.2rem; margin: 0.25rem 0; display: block; color: var(--muted); }
-
-    /* ── MATCHED PAIRS ── */
+    .plus { font-size: 1.2rem; margin: 0.25rem 0; display: block; color: var(--muted); }
     .matches-section { margin-top: 2.5rem; }
-
-    .matched-pair {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .pair-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex: 1;
-    }
-
+    .matched-pair { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+    .pair-info { display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 120px; }
     .pair-name { font-size: 0.88rem; font-weight: 500; }
     .pair-role { font-size: 0.7rem; color: var(--muted); }
-
-    .pair-arrow {
-      font-size: 1.2rem;
-      opacity: 0.3;
-    }
-
-    .pair-flight {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.78rem;
-      color: var(--blue);
-      background: rgba(74,144,217,0.1);
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
-    }
-
-    .unmatch-btn {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 0.3rem 0.7rem;
-      border-radius: 4px;
-      font-size: 0.72rem;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: all 0.15s;
-    }
-
-    .unmatch-btn:hover { border-color: var(--red); color: var(--red); }
-
-    /* ── SEARCH ── */
-    .search-row {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .search-input {
-      flex: 1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.5rem 0.85rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.83rem;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    .search-input:focus { border-color: var(--muted); }
+    .pair-arrow { font-size: 1.2rem; opacity: 0.3; }
+    .pair-flight { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--blue); background: rgba(74,144,217,0.1); padding: 0.25rem 0.6rem; border-radius: 4px; }
+    .unmatch-btn { border: 1px solid var(--border); color: var(--muted); padding: 0.3rem 0.7rem; border-radius: 4px; font-size: 0.72rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .search-row { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .search-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem 0.85rem; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; color: var(--text); outline: none; }
     .search-input::placeholder { color: var(--muted); }
-
-    /* ── TOAST ── */
-    #toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--sage);
-      color: #fff;
-      padding: 0.85rem 1.5rem;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 500;
-      z-index: 999;
-      transform: translateY(80px);
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .data-table th { text-align: left; padding: 0.6rem 0.75rem; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
+    .data-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); }
+    .data-table tr:nth-child(even) td { background: var(--surface); }
+    .status-pill { padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.72rem; background: var(--surface); border: 1px solid var(--border); }
+    .export-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; max-width: 480px; }
+    .export-card h3 { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.4rem; }
+    .export-card p { font-size: 0.78rem; color: var(--muted); margin-bottom: 1rem; }
+    .export-btn { border: none; border-radius: 6px; padding: 0.6rem 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; color: #fff; }
+    #toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--sage); color: #fff; padding: 0.85rem 1.5rem; border-radius: 8px; font-size: 0.88rem; font-weight: 500; z-index: 999; transform: translateY(80px); opacity: 0; transition: all 0.3s ease; }
     #toast.show { transform: translateY(0); opacity: 1; }
-
-    /* ── EMPTY STATE ── */
-    .empty {
-      padding: 2.5rem;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    /* ── SKELETON PULSE ── */
-    @keyframes pulse {
-      0%, 100% { opacity: 0.5; }
-      50%       { opacity: 0.85; }
-    }
-
-    /* ── REFRESH BUTTON ── */
-    .refresh-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.4rem 0.9rem;
-      border-radius: 6px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: border-color 0.15s, opacity 0.15s;
-    }
-
-    .refresh-btn:hover:not(:disabled) { border-color: var(--muted); }
-    .refresh-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .last-fetched {
-      font-size: 0.72rem;
-      color: var(--muted);
-      font-family: 'IBM Plex Mono', monospace;
-    }
+    .empty { padding: 2.5rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+    .error-card { padding: 1.5rem; text-align: center; border: 1px solid rgba(217,74,74,0.3); border-radius: 8px; background: rgba(217,74,74,0.05); }
+    .err-title { color: var(--red); font-size: 0.85rem; font-weight: 500; margin-bottom: 0.4rem; }
+    .err-msg { color: var(--muted); font-size: 0.75rem; line-height: 1.5; }
+    .filter-select { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.4rem 0.75rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; }
   </style>
 </head>
 <body>
-
 <div class="layout">
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">Way<span>Buddy</span> <span style="color:var(--muted);font-weight:300;">Admin</span></div>
     <div class="sidebar-label">Navigation</div>
-    <button class="nav-item active"><span class="dot"></span> Match Centre</button>
-    <button class="nav-item"><span class="dot"></span> All Seekers</button>
-    <button class="nav-item"><span class="dot"></span> All Helpers</button>
-    <button class="nav-item"><span class="dot"></span> Confirmed Matches</button>
+    <button class="nav-item active" onclick="showSection('match-centre',this)"><span class="dot"></span> Match Centre</button>
+    <button class="nav-item" onclick="showSection('all-seekers',this)"><span class="dot"></span> All Seekers</button>
+    <button class="nav-item" onclick="showSection('all-helpers',this)"><span class="dot"></span> All Helpers</button>
+    <button class="nav-item" onclick="showSection('all-matches',this)"><span class="dot"></span> Confirmed Matches</button>
     <div class="sidebar-label" style="margin-top:1rem;">Settings</div>
-    <button class="nav-item"><span class="dot"></span> Notifications</button>
-    <button class="nav-item"><span class="dot"></span> Data Export</button>
-    <div class="sidebar-footer">
-      <div>Logged in as <strong>Admin</strong></div>
-      <div style="margin-top:0.25rem;font-size:0.7rem;">v1.0 · <a href="index.html" style="color:var(--terracotta);text-decoration:none;">View Site</a></div>
-    </div>
+    <button class="nav-item" onclick="showSection('notifications',this)"><span class="dot"></span> Notifications</button>
+    <button class="nav-item" onclick="showSection('data-export',this)"><span class="dot"></span> Data Export</button>
+    <div class="sidebar-footer">Logged in as <strong>Admin</strong><br><span style="font-size:0.7rem;">v1.0 · <a href="/" style="color:var(--terracotta);text-decoration:none;">View Site</a></span></div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
-    <!-- TOPBAR -->
     <div class="topbar">
       <div>
-        <div class="topbar h1" style="font-size:1rem;font-weight:600;">Match Centre</div>
-        <div class="topbar-sub">Manually review and pair seekers with helpers</div>
+        <div style="font-size:1rem;font-weight:600;" id="page-title">Match Centre</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:0.1rem;">Manually review and pair seekers with helpers</div>
       </div>
       <div class="topbar-actions">
         <span class="last-fetched" id="last-fetched"></span>
-        <button class="refresh-btn" id="refresh-btn" onclick="fetchData()">⟳ Refresh</button>
-        <span class="badge badge-warn" id="pending-badge">— pending</span>
-        <span class="badge badge-ok" id="matched-badge">— matched</span>
+        <button class="refresh-btn" id="refresh-btn" onclick="fetchData();fetchPendingHelpers();">&#x27F3; Refresh</button>
+        <span class="badge badge-warn" id="pending-badge">&#8212; pending</span>
+        <span class="badge badge-ok" id="matched-badge">&#8212; matched</span>
       </div>
     </div>
 
-    <!-- STATS -->
     <div class="stats-row">
-      <div class="stat-box">
-        <div class="val" id="stat-seekers">0</div>
-        <div class="lbl">Solo Seekers</div>
-        <div class="delta delta-up">↑ Awaiting match</div>
-      </div>
-      <div class="stat-box">
-        <div class="val" id="stat-helpers">0</div>
-        <div class="lbl">Available Helpers</div>
-        <div class="delta delta-up">↑ Ready to assist</div>
-      </div>
-      <div class="stat-box">
-        <div class="val" id="stat-matched">0</div>
-        <div class="lbl">Confirmed Matches</div>
-        <div class="delta delta-up">↑ This session</div>
-      </div>
-      <div class="stat-box">
-        <div class="val" id="stat-pending">0</div>
-        <div class="lbl">Pending Review</div>
-        <div class="delta" style="color:var(--gold);">⚠ Needs attention</div>
-      </div>
+      <div class="stat-box"><div class="val" id="stat-seekers">0</div><div class="lbl">Solo Seekers</div><div class="delta delta-up">&#8593; Awaiting match</div></div>
+      <div class="stat-box"><div class="val" id="stat-helpers">0</div><div class="lbl">Available Helpers</div><div class="delta delta-up">&#8593; Ready to assist</div></div>
+      <div class="stat-box"><div class="val" id="stat-matched">0</div><div class="lbl">Confirmed Matches</div><div class="delta delta-up">&#8593; This session</div></div>
+      <div class="stat-box"><div class="val" id="stat-pending">0</div><div class="lbl">Pending Review</div><div class="delta" style="color:var(--gold);">&#9888; Needs attention</div></div>
     </div>
 
-    <!-- CONTENT -->
-    <div class="content">
-      <p class="section-title">↓ Select one seeker + one helper, then click Match</p>
-
+    <!-- MATCH CENTRE -->
+    <div id="section-match-centre" class="content">
+      <p class="section-title">&#8595; Select one seeker + one helper, then click Match</p>
       <div class="match-arena">
-
-        <!-- SEEKERS -->
         <div>
           <div class="panel-header">
-            <span class="panel-title" style="color:var(--terracotta);">✈ Solo Travellers</span>
+            <span class="panel-title" style="color:var(--terracotta);">Solo Travellers</span>
             <span class="count-badge seeker" id="seeker-count">0</span>
           </div>
-          <div class="search-row">
-            <input class="search-input" placeholder="Search by name, flight…" oninput="filterCards('solo', this.value)"/>
-          </div>
-          <div class="card-list" id="seeker-list"></div>
+          <div class="search-row"><input class="search-input" placeholder="Search by name, flight..." oninput="filterCards('solo',this.value)"/></div>
+          <div class="card-list" id="seeker-list"><div class="empty">Loading...</div></div>
         </div>
-
-        <!-- MATCH COLUMN -->
         <div class="match-col">
-          <div class="icon">⇄</div>
-          <div class="match-preview" id="match-preview">
-            Select one from each side
-          </div>
-          <button class="match-btn" id="match-btn" disabled onclick="createMatch()">
-            Confirm Match →
-          </button>
-          <button style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:0.5rem;font-size:0.75rem;cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;" onclick="clearSelection()">
-            Clear selection
-          </button>
+          <div style="font-size:1.5rem;opacity:0.3;">&#8644;</div>
+          <div class="match-preview" id="match-preview">Select one from each side</div>
+          <button class="match-btn" id="match-btn" disabled onclick="createMatch()">Confirm Match &#8594;</button>
+          <button style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:0.5rem;font-size:0.75rem;cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;" onclick="clearSelection()">Clear selection</button>
         </div>
-
-        <!-- HELPERS -->
         <div>
           <div class="panel-header">
-            <span class="panel-title" style="color:var(--sage);">🤝 Volunteer Helpers</span>
+            <span class="panel-title" style="color:var(--sage);">Volunteer Helpers</span>
             <span class="count-badge helper" id="helper-count">0</span>
           </div>
-          <div class="search-row">
-            <input class="search-input" placeholder="Search by name, flight…" oninput="filterCards('helper', this.value)"/>
-          </div>
-          <div class="card-list" id="helper-list"></div>
+          <div class="search-row"><input class="search-input" placeholder="Search by name, flight..." oninput="filterCards('helper',this.value)"/></div>
+          <div class="card-list" id="helper-list"><div class="empty">Loading...</div></div>
         </div>
-
       </div>
-
-      <!-- MATCHED PAIRS -->
       <div class="matches-section">
         <p class="section-title">Confirmed Matches This Session</p>
-        <div id="matched-list">
-          <div class="empty">No matches confirmed yet.</div>
-        </div>
+        <div id="matched-list"><div class="empty">No matches confirmed yet.</div></div>
       </div>
+      <div class="matches-section">
+        <p class="section-title" style="color:var(--gold);">Pending Helper Approvals</p>
+        <div id="pending-helpers-list"><div class="empty">No helpers awaiting approval.</div></div>
+      </div>
+    </div>
 
+    <!-- ALL SEEKERS -->
+    <div id="section-all-seekers" class="content" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+        <p class="section-title" style="margin:0;">All Registered Seekers</p>
+        <select id="seeker-filter" class="filter-select" onchange="loadAllSeekers()">
+          <option value="">All statuses</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="matched">Matched</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <div id="all-seekers-table"><div class="empty">Loading...</div></div>
+    </div>
+
+    <!-- ALL HELPERS -->
+    <div id="section-all-helpers" class="content" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+        <p class="section-title" style="margin:0;">All Registered Helpers</p>
+        <select id="helper-filter" class="filter-select" onchange="loadAllHelpers()">
+          <option value="">All statuses</option>
+          <option value="pending_approval">Pending approval</option>
+          <option value="approved">Approved</option>
+          <option value="matched">Matched</option>
+        </select>
+      </div>
+      <div id="all-helpers-table"><div class="empty">Loading...</div></div>
+    </div>
+
+    <!-- ALL MATCHES -->
+    <div id="section-all-matches" class="content" style="display:none;">
+      <p class="section-title">All Confirmed Matches</p>
+      <div id="all-matches-table"><div class="empty">Loading...</div></div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div id="section-notifications" class="content" style="display:none;">
+      <p class="section-title">Notification Log</p>
+      <div id="notifications-table"><div class="empty">Loading...</div></div>
+    </div>
+
+    <!-- DATA EXPORT -->
+    <div id="section-data-export" class="content" style="display:none;">
+      <p class="section-title">Export Data</p>
+      <div class="export-card"><h3>Seekers</h3><p>Download all seeker registrations as a CSV file.</p><button class="export-btn" style="background:var(--terracotta);" onclick="exportCSV('seekers')">Download Seekers CSV</button></div>
+      <div class="export-card"><h3>Helpers</h3><p>Download all helper registrations as a CSV file.</p><button class="export-btn" style="background:var(--sage);" onclick="exportCSV('helpers')">Download Helpers CSV</button></div>
+      <div class="export-card"><h3>Matches</h3><p>Download all confirmed matches as a CSV file.</p><button class="export-btn" style="background:var(--blue);" onclick="exportCSV('matches')">Download Matches CSV</button></div>
     </div>
   </main>
 </div>
-
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
-// ─── CONFIGURATION ──────────────────────────────────────────────────────────
-// After deploying your Apps Script Web App, paste the URL below.
-// It looks like: https://script.google.com/macros/s/AKfycb.../exec
-const API_URL = '';
+var SEEKERS=[],HELPERS=[],selectedSolo=null,selectedHelper=null,confirmedMatches=[],matchedIds=new Set();
 
-// ─── LIVE DATA (populated by fetchData) ────────────────────────────────────
-let SEEKERS = [];
-let HELPERS = [];
-
-// ─── STATE ─────────────────────────────────────────────────────────────────
-let selectedSolo   = null;
-let selectedHelper = null;
-let confirmedMatches = [];
-let matchedIds = new Set();
-
-// ─── LOADING / ERROR STATES ────────────────────────────────────────────────
-function setLoading(isLoading) {
-  const seekerList = document.getElementById('seeker-list');
-  const helperList = document.getElementById('helper-list');
-  const refreshBtn = document.getElementById('refresh-btn');
-  if (isLoading) {
-    const skeleton = `
-      <div style="display:flex;flex-direction:column;gap:0.6rem;">
-        ${[1,2,3].map(() => `
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;opacity:0.5;animation:pulse 1.4s ease-in-out infinite;">
-            <div style="height:12px;background:var(--border);border-radius:4px;width:60%;margin-bottom:0.6rem;"></div>
-            <div style="height:10px;background:var(--border);border-radius:4px;width:40%;margin-bottom:0.75rem;"></div>
-            <div style="display:flex;gap:0.4rem;">
-              <div style="height:20px;width:60px;background:var(--border);border-radius:3px;"></div>
-              <div style="height:20px;width:80px;background:var(--border);border-radius:3px;"></div>
-            </div>
-          </div>`).join('')}
-      </div>`;
-    seekerList.innerHTML = skeleton;
-    helperList.innerHTML = skeleton;
-    refreshBtn.textContent = '⟳ Loading…';
-    refreshBtn.disabled = true;
-  } else {
-    refreshBtn.textContent = '⟳ Refresh';
-    refreshBtn.disabled = false;
-  }
+function showSection(name,btn){
+  document.querySelectorAll('[id^="section-"]').forEach(function(s){s.style.display='none';});
+  document.querySelectorAll('.nav-item').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var el=document.getElementById('section-'+name);
+  if(el)el.style.display='block';
+  var titles={'match-centre':'Match Centre','all-seekers':'All Seekers','all-helpers':'All Helpers','all-matches':'Confirmed Matches','notifications':'Notifications','data-export':'Data Export'};
+  document.getElementById('page-title').textContent=titles[name]||name;
+  if(name==='all-seekers')loadAllSeekers();
+  if(name==='all-helpers')loadAllHelpers();
+  if(name==='all-matches')loadAllMatches();
+  if(name==='notifications')loadNotifications();
 }
 
-function showError(message) {
-  const errorHtml = `
-    <div style="padding:1.5rem;text-align:center;border:1px solid rgba(217,74,74,0.3);border-radius:8px;background:rgba(217,74,74,0.05);">
-      <div style="font-size:1.2rem;margin-bottom:0.5rem;">⚠</div>
-      <div style="color:var(--red);font-size:0.85rem;font-weight:500;margin-bottom:0.4rem;">Failed to load data</div>
-      <div style="color:var(--muted);font-size:0.75rem;line-height:1.5;">${message}</div>
-    </div>`;
-  document.getElementById('seeker-list').innerHTML = errorHtml;
-  document.getElementById('helper-list').innerHTML = errorHtml;
+function showError(msg){
+  var h='<div class="error-card"><div class="err-title">Failed to load data</div><div class="err-msg">'+msg+'</div></div>';
+  document.getElementById('seeker-list').innerHTML=h;
+  document.getElementById('helper-list').innerHTML=h;
 }
 
-// ─── FETCH FROM FLASK API ──────────────────────────────────────────────────
-async function fetchData() {
+function setLoading(on){
+  var btn=document.getElementById('refresh-btn');
+  btn.textContent=on?'Loading...':'Refresh';
+  btn.disabled=on;
+}
+
+async function fetchData(){
   setLoading(true);
-  try {
-    const [seekersRes, helpersRes] = await Promise.all([
-      fetch('/api/admin/seekers'),
-      fetch('/api/admin/helpers')
-    ]);
+  try{
+    var sr=await fetch('/api/admin/seekers?status=pending');
+    var hr=await fetch('/api/admin/helpers');
+    var sd=await sr.json(),hd=await hr.json();
+    SEEKERS=sd.seekers||[];
+    HELPERS=hd.helpers||[];
+    document.getElementById('last-fetched').textContent='Last refreshed: '+new Date().toLocaleTimeString();
+    renderCards('solo',SEEKERS);
+    renderCards('helper',HELPERS);
+    await fetchExistingMatches();
+    showToast('Loaded '+SEEKERS.length+' seekers, '+HELPERS.length+' helpers');
+  }catch(err){
+    showError(err.message);
+    console.error('WayBuddy API error:',err);
+  }finally{setLoading(false);}
+}
 
-    if (!seekersRes.ok) throw new Error(`Seekers HTTP ${seekersRes.status}`);
-    if (!helpersRes.ok) throw new Error(`Helpers HTTP ${helpersRes.status}`);
-
-    const seekersData = await seekersRes.json();
-    const helpersData = await helpersRes.json();
-
-    if (!seekersData.success) throw new Error(seekersData.error || 'Seekers API error');
-    if (!helpersData.success) throw new Error(helpersData.error || 'Helpers API error');
-
-    SEEKERS = seekersData.seekers || [];
-    HELPERS = helpersData.helpers || [];
-
-    const ts = new Date();
-    document.getElementById('last-fetched').textContent =
-      `Last refreshed: ${ts.toLocaleTimeString()}`;
-
-    renderCards('solo', SEEKERS);
-    renderCards('helper', HELPERS);
+async function fetchExistingMatches(){
+  try{
+    var res=await fetch('/api/admin/matches');
+    var data=await res.json();
+    if(!data.success)return;
+    confirmedMatches=(data.matches||[]).map(function(m){return{id:m.id,seeker:{id:m.seeker_id,name:m.seeker_name||'Seeker #'+m.seeker_id,flight_number:'',travel_date:''},helper:{id:m.helper_id,name:m.helper_name||'Helper #'+m.helper_id}};});
+    (data.matches||[]).forEach(function(m){matchedIds.add(m.seeker_id);matchedIds.add(m.helper_id);});
+    renderMatches();
     updateStats();
-    showToast(`✓ Loaded ${SEEKERS.length} seekers · ${HELPERS.length} helpers`);
-
-  } catch (err) {
-    showError(err.message + '<br><br>Check your API_URL and make sure Flask is running.');
-    console.error('WayBuddy API error:', err);
-  } finally {
-    setLoading(false);
-  }
+  }catch(e){console.error('Failed to load matches:',e);}
 }
 
-// ─── RENDER ────────────────────────────────────────────────────────────────
-function initDashboard() {
-  fetchData();
+async function fetchPendingHelpers(){
+  try{
+    var res=await fetch('/api/admin/helpers?status=pending_approval');
+    var data=await res.json();
+    renderPendingHelpers(data.helpers||[]);
+  }catch(e){console.error('Failed to fetch pending helpers:',e);}
 }
 
-function renderCards(type, data) {
-  const listEl = document.getElementById(type === 'solo' ? 'seeker-list' : 'helper-list');
-  const countEl = document.getElementById(type === 'solo' ? 'seeker-count' : 'helper-count');
+function getLangs(p){
+  var raw=p.languages||[];
+  return Array.isArray(raw)?raw:(raw?raw.split(',').map(function(l){return l.trim();}).filter(Boolean):[]);
+}
 
-  countEl.textContent = data.filter(d => !matchedIds.has(d.id)).length;
+function getTags(p,type){
+  var raw=type==='solo'?(p.help_needed||[]):(p.skills||[]);
+  return Array.isArray(raw)?raw:(raw?raw.split(',').map(function(t){return t.trim();}).filter(Boolean):[]);
+}
 
-  if (data.length === 0) {
-    listEl.innerHTML = '<div class="empty">No profiles found.</div>';
-    return;
-  }
-
-  listEl.innerHTML = data.map(p => {
-    const isSelected = type === 'solo'
-      ? selectedSolo?.id === p.id
-      : selectedHelper?.id === p.id;
-    const isMatched = matchedIds.has(p.id);
-    const cls = isMatched ? 'matched' : (isSelected ? (type === 'solo' ? 'selected-solo' : 'selected-helper') : '');
-    const tags = type === 'solo' ? p.needs : p.skills;
-    const avatarCls = type === 'solo' ? 'avatar-solo' : 'avatar-helper';
-
-    return `
-      <div class="profile-card ${cls}" onclick="selectCard('${type}','${p.id}')">
-        <div class="card-top">
-          <div class="avatar ${avatarCls}">${p.name[0]}</div>
-          <div>
-            <div class="card-name">${p.name}</div>
-            <div class="card-meta">${p.age} · ${p.gender} · ${p.languages.join(', ')}</div>
-          </div>
-          ${isMatched ? '<div class="badge badge-ok" style="margin-left:auto;font-size:0.65rem;">matched</div>' : ''}
-        </div>
-        <div class="card-tags">
-          <span class="tag flight">${p.flight}</span>
-          <span class="tag flight">${p.route}</span>
-          <span class="tag flight">${p.date}</span>
-          ${tags.map(t => `<span class="tag need">${t}</span>`).join('')}
-          ${p.languages.map(l => `<span class="tag lang">${l}</span>`).join('')}
-        </div>
-        ${p.note ? `<div style="margin-top:0.6rem;font-size:0.75rem;color:var(--muted);line-height:1.4;">"${p.note}"</div>` : ''}
-        <div class="card-footer">
-          <span class="card-date">${p.time} · ${p.date}</span>
-          <div class="status-dot ${isMatched ? 'status-matched' : 'status-pending'}"></div>
-        </div>
-      </div>`;
+function renderCards(type,data){
+  var listEl=document.getElementById(type==='solo'?'seeker-list':'helper-list');
+  var countEl=document.getElementById(type==='solo'?'seeker-count':'helper-count');
+  countEl.textContent=data.filter(function(d){return!matchedIds.has(d.id);}).length;
+  if(!data.length){listEl.innerHTML='<div class="empty">No profiles found.</div>';return;}
+  listEl.innerHTML=data.map(function(p){
+    var isSelected=type==='solo'?(selectedSolo&&selectedSolo.id===p.id):(selectedHelper&&selectedHelper.id===p.id);
+    var isMatched=matchedIds.has(p.id);
+    var cls=isMatched?'matched':(isSelected?(type==='solo'?'selected-solo':'selected-helper'):'');
+    var tags=getTags(p,type);
+    var langs=getLangs(p);
+    var route=(p.departure_airport||'')+' -> '+(p.arrival_airport||'');
+    var avatarCls=type==='solo'?'avatar-solo':'avatar-helper';
+    return '<div class="profile-card '+cls+'" onclick="selectCard(\''+type+'\','+p.id+')">'+
+      '<div class="card-top">'+
+      '<div class="avatar '+avatarCls+'">'+p.name[0]+'</div>'+
+      '<div><div class="card-name">'+p.name+'</div><div class="card-meta">'+p.age+' &middot; '+(p.gender||'&mdash;')+' &middot; '+langs.join(', ')+'</div></div>'+
+      (isMatched?'<div class="badge badge-ok" style="margin-left:auto;font-size:0.65rem;">matched</div>':'')+
+      '</div>'+
+      '<div class="card-tags">'+
+      '<span class="tag flight">'+(p.flight_number||'')+'</span>'+
+      '<span class="tag flight">'+route+'</span>'+
+      '<span class="tag flight">'+(p.travel_date||'')+'</span>'+
+      tags.map(function(t){return'<span class="tag need">'+t+'</span>';}).join('')+
+      langs.map(function(l){return'<span class="tag lang">'+l+'</span>';}).join('')+
+      '</div>'+
+      (p.notes?'<div style="margin-top:0.6rem;font-size:0.75rem;color:var(--muted);line-height:1.4;">"'+p.notes+'"</div>':'')+
+      '<div class="card-footer"><span class="card-date">'+(p.departure_time||'')+' &middot; '+(p.travel_date||'')+'</span>'+
+      '<div class="status-dot '+(isMatched?'status-matched':'status-pending')+'"></div></div>'+
+      '</div>';
   }).join('');
 }
 
-function filterCards(type, query) {
-  const data = type === 'solo' ? SEEKERS : HELPERS;
-  const q = query.toLowerCase();
-  const filtered = data.filter(p =>
-    p.name.toLowerCase().includes(q) ||
-    p.flight.toLowerCase().includes(q) ||
-    p.route.toLowerCase().includes(q) ||
-    (type === 'solo' ? p.needs : p.skills).some(t => t.toLowerCase().includes(q))
-  );
-  renderCards(type, filtered);
+function filterCards(type,q){
+  var data=type==='solo'?SEEKERS:HELPERS;
+  var ql=q.toLowerCase();
+  var filtered=data.filter(function(p){return p.name.toLowerCase().includes(ql)||(p.flight_number&&p.flight_number.toLowerCase().includes(ql))||(p.departure_airport&&p.departure_airport.toLowerCase().includes(ql));});
+  renderCards(type,filtered);
 }
 
-// ─── SELECTION ─────────────────────────────────────────────────────────────
-function selectCard(type, id) {
-  const pool = type === 'solo' ? SEEKERS : HELPERS;
-  const person = pool.find(p => p.id === id);
-  if (!person || matchedIds.has(id)) return;
-
-  if (type === 'solo') {
-    selectedSolo = selectedSolo?.id === id ? null : person;
-  } else {
-    selectedHelper = selectedHelper?.id === id ? null : person;
-  }
-
-  renderCards('solo', SEEKERS);
-  renderCards('helper', HELPERS);
-  updatePreview();
+function selectCard(type,id){
+  var numId=Number(id);
+  var pool=type==='solo'?SEEKERS:HELPERS;
+  var person=pool.find(function(p){return p.id===numId;});
+  if(!person||matchedIds.has(numId))return;
+  if(type==='solo')selectedSolo=(selectedSolo&&selectedSolo.id===numId)?null:person;
+  else selectedHelper=(selectedHelper&&selectedHelper.id===numId)?null:person;
+  renderCards('solo',SEEKERS);renderCards('helper',HELPERS);updatePreview();
 }
 
-function updatePreview() {
-  const preview = document.getElementById('match-preview');
-  const btn = document.getElementById('match-btn');
-
-  if (selectedSolo && selectedHelper) {
+function updatePreview(){
+  var preview=document.getElementById('match-preview');
+  var btn=document.getElementById('match-btn');
+  if(selectedSolo&&selectedHelper){
     preview.classList.add('ready');
-    preview.innerHTML = `
-      <div class="match-preview-content">
-        <strong>${selectedSolo.name}</strong>
-        <span class="plus">+</span>
-        <strong style="color:var(--sage)">${selectedHelper.name}</strong>
-      </div>`;
-    btn.disabled = false;
-  } else if (selectedSolo) {
+    preview.innerHTML='<div class="match-preview-content"><strong>'+selectedSolo.name+'</strong><span class="plus">+</span><strong style="color:var(--sage)">'+selectedHelper.name+'</strong></div>';
+    btn.disabled=false;
+  }else if(selectedSolo){
     preview.classList.remove('ready');
-    preview.innerHTML = `<strong style="color:var(--terracotta)">${selectedSolo.name}</strong><br><span style="opacity:0.5;font-size:0.72rem;">Now select a helper →</span>`;
-    btn.disabled = true;
-  } else if (selectedHelper) {
+    preview.innerHTML='<strong style="color:var(--terracotta)">'+selectedSolo.name+'</strong><br><span style="opacity:0.5;font-size:0.72rem;">Now select a helper</span>';
+    btn.disabled=true;
+  }else if(selectedHelper){
     preview.classList.remove('ready');
-    preview.innerHTML = `<strong style="color:var(--sage)">${selectedHelper.name}</strong><br><span style="opacity:0.5;font-size:0.72rem;">← Now select a seeker</span>`;
-    btn.disabled = true;
-  } else {
+    preview.innerHTML='<strong style="color:var(--sage)">'+selectedHelper.name+'</strong><br><span style="opacity:0.5;font-size:0.72rem;">Now select a seeker</span>';
+    btn.disabled=true;
+  }else{
     preview.classList.remove('ready');
-    preview.textContent = 'Select one from each side';
-    btn.disabled = true;
+    preview.textContent='Select one from each side';
+    btn.disabled=true;
   }
 }
 
-function clearSelection() {
-  selectedSolo = null;
-  selectedHelper = null;
-  renderCards('solo', SEEKERS);
-  renderCards('helper', HELPERS);
-  updatePreview();
+function clearSelection(){selectedSolo=null;selectedHelper=null;renderCards('solo',SEEKERS);renderCards('helper',HELPERS);updatePreview();}
+
+async function createMatch(){
+  if(!selectedSolo||!selectedHelper)return;
+  var btn=document.getElementById('match-btn');
+  btn.disabled=true;btn.textContent='Confirming...';
+  try{
+    var res=await fetch('/api/admin/match',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seeker_id:selectedSolo.id,helper_id:selectedHelper.id})});
+    var data=await res.json();
+    if(!data.success){showToast('Error: '+data.error);btn.disabled=false;btn.textContent='Confirm Match';return;}
+    confirmedMatches.push({id:data.match.id,seeker:Object.assign({},selectedSolo),helper:Object.assign({},selectedHelper)});
+    matchedIds.add(selectedSolo.id);matchedIds.add(selectedHelper.id);
+    showToast('Matched '+selectedSolo.name+' with '+selectedHelper.name);
+    selectedSolo=null;selectedHelper=null;
+    renderCards('solo',SEEKERS);renderCards('helper',HELPERS);updatePreview();renderMatches();updateStats();
+  }catch(err){showToast('Network error: '+err.message);}
+  finally{btn.disabled=false;btn.textContent='Confirm Match';}
 }
 
-// ─── MATCHING ──────────────────────────────────────────────────────────────
-function createMatch() {
-  if (!selectedSolo || !selectedHelper) return;
+function renderMatches(){
+  var el=document.getElementById('matched-list');
+  if(!confirmedMatches.length){el.innerHTML='<div class="empty">No matches confirmed yet.</div>';return;}
+  el.innerHTML=confirmedMatches.map(function(m,i){return'<div class="matched-pair">'+
+    '<div class="pair-info"><div class="avatar avatar-solo">'+m.seeker.name[0]+'</div><div><div class="pair-name">'+m.seeker.name+'</div><div class="pair-role">Solo Traveller</div></div></div>'+
+    '<div class="pair-arrow">&#8644;</div>'+
+    '<div class="pair-info"><div class="avatar avatar-helper">'+m.helper.name[0]+'</div><div><div class="pair-name">'+m.helper.name+'</div><div class="pair-role">Helper</div></div></div>'+
+    '<div class="pair-flight">'+(m.seeker.flight_number||'')+' &middot; '+(m.seeker.travel_date||'')+'</div>'+
+    '<button class="unmatch-btn" onclick="notifyMatch('+i+')" style="background:var(--sage);color:#fff;border:none;margin-right:0.5rem;">Notify</button>'+
+    '<button class="unmatch-btn" onclick="unmatch('+i+')" style="background:var(--red);color:#fff;border:none;">Remove</button>'+
+    '</div>';}).join('');
+}
 
-  confirmedMatches.push({ seeker: {...selectedSolo}, helper: {...selectedHelper} });
-  matchedIds.add(selectedSolo.id);
-  matchedIds.add(selectedHelper.id);
+async function notifyMatch(index){
+  var m=confirmedMatches[index];
+  if(!m.id){showToast('No match ID.');return;}
+  try{
+    var res=await fetch('/api/notify/match',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({match_id:m.id})});
+    var data=await res.json();
+    showToast(data.success?'Notifications sent to both parties':'Notify failed: '+JSON.stringify(data.results));
+  }catch(err){showToast('Network error: '+err.message);}
+}
 
-  showToast(`✓ Matched ${selectedSolo.name} with ${selectedHelper.name}`);
+async function unmatch(index){
+  var m=confirmedMatches[index];
+  if(!m.id){showToast('No match ID.');return;}
+  try{
+    var res=await fetch('/api/admin/unmatch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({match_id:m.id})});
+    var data=await res.json();
+    if(!data.success){showToast('Error: '+data.error);return;}
+    confirmedMatches.splice(index,1);
+    matchedIds.delete(m.seeker.id);matchedIds.delete(m.helper.id);
+    await fetchData();
+    showToast('Match removed. Both parties are back in the pool.');
+  }catch(err){showToast('Network error: '+err.message);}
+}
 
-  selectedSolo = null;
-  selectedHelper = null;
-
-  renderCards('solo', SEEKERS);
-  renderCards('helper', HELPERS);
-  updatePreview();
-  renderMatches();
+function renderPendingHelpers(helpers){
+  var el=document.getElementById('pending-helpers-list');
+  if(!helpers.length){el.innerHTML='<div class="empty">No helpers awaiting approval.</div>';updateStats();return;}
+  el.innerHTML=helpers.map(function(h){
+    var langs=Array.isArray(h.languages)?h.languages.join(', '):(h.languages||'');
+    var skills=Array.isArray(h.skills)?h.skills.join(', '):(h.skills||'');
+    return'<div class="matched-pair">'+
+      '<div class="pair-info"><div class="avatar avatar-helper">'+h.name[0]+'</div><div><div class="pair-name">'+h.name+'</div><div class="pair-role">'+h.age+' &middot; '+(h.gender||'&mdash;')+' &middot; '+(h.based_at_airport||'&mdash;')+'</div></div></div>'+
+      '<div class="pair-flight" style="color:var(--muted);font-size:0.75rem;">'+langs+'<br>'+skills+'</div>'+
+      '<button onclick="approveHelper('+h.id+',this)" style="background:var(--sage);color:#fff;border:none;padding:0.4rem 1rem;border-radius:4px;cursor:pointer;font-family:sans-serif;font-size:0.78rem;">Approve</button>'+
+      '</div>';
+  }).join('');
   updateStats();
 }
 
-function unmatch(index) {
-  const m = confirmedMatches[index];
-  matchedIds.delete(m.seeker.id);
-  matchedIds.delete(m.helper.id);
-  confirmedMatches.splice(index, 1);
-  renderCards('solo', SEEKERS);
-  renderCards('helper', HELPERS);
-  renderMatches();
-  updateStats();
-  showToast('Match removed.');
+async function approveHelper(helperId,btn){
+  btn.disabled=true;btn.textContent='Approving...';
+  try{
+    var res=await fetch('/api/admin/approve-helper',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({helper_id:helperId})});
+    var data=await res.json();
+    if(data.success){showToast(data.message);fetchPendingHelpers();fetchData();}
+    else{showToast('Error: '+data.error);btn.disabled=false;btn.textContent='Approve';}
+  }catch(err){showToast('Network error: '+err.message);btn.disabled=false;btn.textContent='Approve';}
 }
 
-function renderMatches() {
-  const el = document.getElementById('matched-list');
-  if (confirmedMatches.length === 0) {
-    el.innerHTML = '<div class="empty">No matches confirmed yet.</div>';
-    return;
-  }
-  el.innerHTML = confirmedMatches.map((m, i) => `
-    <div class="matched-pair">
-      <div class="pair-info">
-        <div class="avatar avatar-solo">${m.seeker.name[0]}</div>
-        <div>
-          <div class="pair-name">${m.seeker.name}</div>
-          <div class="pair-role">Solo Traveller</div>
-        </div>
-      </div>
-      <div class="pair-arrow">⇄</div>
-      <div class="pair-info">
-        <div class="avatar avatar-helper">${m.helper.name[0]}</div>
-        <div>
-          <div class="pair-name">${m.helper.name}</div>
-          <div class="pair-role">Helper</div>
-        </div>
-      </div>
-      <div class="pair-flight">${m.seeker.flight} · ${m.seeker.date}</div>
-      <button class="unmatch-btn" onclick="unmatch(${i})">Unmatch</button>
-    </div>
-  `).join('');
+function updateStats(){
+  var pendingApprovals=document.querySelectorAll('#pending-helpers-list .matched-pair').length;
+  var totalPending=SEEKERS.filter(function(s){return!matchedIds.has(s.id);}).length+pendingApprovals;
+  document.getElementById('stat-seekers').textContent=SEEKERS.length;
+  document.getElementById('stat-helpers').textContent=HELPERS.length;
+  document.getElementById('stat-matched').textContent=confirmedMatches.length;
+  document.getElementById('stat-pending').textContent=totalPending;
+  document.getElementById('pending-badge').textContent=totalPending+' pending';
+  document.getElementById('matched-badge').textContent=confirmedMatches.length+' matched';
 }
 
-function updateStats() {
-  const unmatched = SEEKERS.filter(s => !matchedIds.has(s.id)).length;
-  const helpersLeft = HELPERS.filter(h => !matchedIds.has(h.id)).length;
-  document.getElementById('stat-seekers').textContent = SEEKERS.length;
-  document.getElementById('stat-helpers').textContent = HELPERS.length;
-  document.getElementById('stat-matched').textContent = confirmedMatches.length;
-  document.getElementById('stat-pending').textContent = unmatched;
-  document.getElementById('pending-badge').textContent = `${unmatched} pending`;
-  document.getElementById('matched-badge').textContent = `${confirmedMatches.length} matched`;
+async function loadAllSeekers(){
+  var el=document.getElementById('all-seekers-table');
+  el.innerHTML='<div class="empty">Loading...</div>';
+  var status=document.getElementById('seeker-filter').value;
+  var url=status?'/api/admin/seekers?status='+status:'/api/admin/seekers';
+  var res=await fetch(url);
+  var data=await res.json();
+  var seekers=data.seekers||[];
+  if(!seekers.length){el.innerHTML='<div class="empty">No seekers found.</div>';return;}
+  el.innerHTML='<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Flight</th><th>Route</th><th>Date</th><th>Help Needed</th><th>Status</th></tr></thead><tbody>'+
+    seekers.map(function(s){return'<tr><td>'+s.id+'</td><td>'+s.name+'</td><td>'+s.phone+'</td><td>'+(s.flight_number||'')+'</td><td>'+(s.departure_airport||'')+' &rarr; '+(s.arrival_airport||'')+'</td><td>'+(s.travel_date||'')+'</td><td>'+(Array.isArray(s.help_needed)?s.help_needed.join(', '):(s.help_needed||''))+'</td><td><span class="status-pill">'+s.status+'</span></td></tr>';}).join('')+
+    '</tbody></table>';
 }
 
-// ─── TOAST ─────────────────────────────────────────────────────────────────
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+async function loadAllHelpers(){
+  var el=document.getElementById('all-helpers-table');
+  el.innerHTML='<div class="empty">Loading...</div>';
+  var status=document.getElementById('helper-filter').value;
+  var url=status?'/api/admin/helpers?status='+status:'/api/admin/helpers?status=all';
+  var res=await fetch(url);
+  var data=await res.json();
+  var helpers=data.helpers||[];
+  if(!helpers.length){el.innerHTML='<div class="empty">No helpers found.</div>';return;}
+  el.innerHTML='<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Based At</th><th>Languages</th><th>Skills</th><th>Status</th><th>Action</th></tr></thead><tbody>'+
+    helpers.map(function(h){return'<tr><td>'+h.id+'</td><td>'+h.name+'</td><td>'+h.phone+'</td><td>'+(h.based_at_airport||'&mdash;')+'</td><td>'+(Array.isArray(h.languages)?h.languages.join(', '):(h.languages||''))+'</td><td>'+(Array.isArray(h.skills)?h.skills.join(', '):(h.skills||''))+'</td><td><span class="status-pill">'+h.status+'</span></td><td>'+(h.status==='pending_approval'?'<button onclick="approveHelper('+h.id+',this)" style="background:var(--sage);color:#fff;border:none;padding:0.3rem 0.75rem;border-radius:4px;font-size:0.75rem;cursor:pointer;">Approve</button>':'&mdash;')+'</td></tr>';}).join('')+
+    '</tbody></table>';
 }
 
-// ─── INIT ──────────────────────────────────────────────────────────────────
-initDashboard();
+async function loadAllMatches(){
+  var el=document.getElementById('all-matches-table');
+  el.innerHTML='<div class="empty">Loading...</div>';
+  var res=await fetch('/api/admin/matches');
+  var data=await res.json();
+  var matches=data.matches||[];
+  if(!matches.length){el.innerHTML='<div class="empty">No matches found.</div>';return;}
+  el.innerHTML='<table class="data-table"><thead><tr><th>Match ID</th><th>Seeker</th><th>Helper</th><th>Status</th><th>Matched At</th><th>Notified At</th><th>Action</th></tr></thead><tbody>'+
+    matches.map(function(m){return'<tr><td>'+m.id+'</td><td>'+(m.seeker_name||m.seeker_id)+'</td><td>'+(m.helper_name||m.helper_id)+'</td><td><span class="status-pill">'+m.status+'</span></td><td>'+(m.matched_at?new Date(m.matched_at).toLocaleString():'&mdash;')+'</td><td>'+(m.notified_at?new Date(m.notified_at).toLocaleString():'&mdash;')+'</td><td><button onclick="removeMatchFromTable('+m.id+','+m.seeker_id+','+m.helper_id+')" style="background:var(--red);color:#fff;border:none;padding:0.3rem 0.75rem;border-radius:4px;font-size:0.75rem;cursor:pointer;">Remove</button></td></tr>';}).join('')+
+    '</tbody></table>';
+}
+
+async function removeMatchFromTable(matchId,seekerId,helperId){
+  var res=await fetch('/api/admin/unmatch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({match_id:matchId})});
+  var data=await res.json();
+  if(data.success){matchedIds.delete(seekerId);matchedIds.delete(helperId);showToast('Match removed.');await fetchData();loadAllMatches();}
+  else showToast('Error: '+data.error);
+}
+
+async function loadNotifications(){
+  var el=document.getElementById('notifications-table');
+  var res=await fetch('/api/admin/matches');
+  var data=await res.json();
+  var matches=(data.matches||[]).filter(function(m){return m.notified_at;});
+  if(!matches.length){el.innerHTML='<div class="empty">No notifications sent yet.</div>';return;}
+  el.innerHTML='<table class="data-table"><thead><tr><th>Match ID</th><th>Seeker</th><th>Helper</th><th>Notified At</th></tr></thead><tbody>'+
+    matches.map(function(m){return'<tr><td>'+m.id+'</td><td>'+(m.seeker_name||m.seeker_id)+'</td><td>'+(m.helper_name||m.helper_id)+'</td><td>'+new Date(m.notified_at).toLocaleString()+'</td></tr>';}).join('')+
+    '</tbody></table>';
+}
+
+function exportCSV(type){
+  var urls={seekers:'/api/admin/seekers',helpers:'/api/admin/helpers?status=all',matches:'/api/admin/matches'};
+  fetch(urls[type]).then(function(r){return r.json();}).then(function(data){
+    var rows=data[type]||[];
+    if(!rows.length){showToast('No data to export.');return;}
+    var headers=Object.keys(rows[0]);
+    var csv=[headers.join(',')].concat(rows.map(function(r){return headers.map(function(h){var v=Array.isArray(r[h])?r[h].join('; '):(r[h]!==null&&r[h]!==undefined?r[h]:'');return'"'+String(v).replace(/"/g,'""')+'"';}).join(',');})).join('\n');
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download='waybuddy-'+type+'-'+new Date().toISOString().split('T')[0]+'.csv';
+    a.click();
+    showToast(type+' exported successfully');
+  });
+}
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},3000);
+}
+
+fetchData();
+fetchPendingHelpers();
 </script>
 </body>
 </html>
