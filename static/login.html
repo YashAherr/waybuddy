@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WayBuddy — Admin Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0F1117; --surface: #181B24; --border: #262B38;
+      --text: #E8EAF0; --muted: #6B7280;
+      --terracotta: #E07A56; --red: #D94A4A;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 380px;
+    }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .logo span { color: var(--terracotta); }
+    .subtitle {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+    }
+    label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.65rem 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      outline: none;
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+    input:focus { border-color: var(--terracotta); }
+    .login-btn {
+      background: var(--terracotta);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 0.5rem;
+      transition: opacity 0.2s;
+    }
+    .login-btn:hover:not(:disabled) { opacity: 0.85; }
+    .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .error {
+      display: none;
+      background: rgba(217,74,74,0.1);
+      border: 1px solid rgba(217,74,74,0.3);
+      color: var(--red);
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .error.show { display: block; }
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .back:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <div class="logo">Way<span>Buddy</span></div>
+    <div class="subtitle">Admin access only</div>
+
+    <div class="field">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter username" autocomplete="username"/>
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password" autocomplete="current-password"/>
+    </div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Sign in</button>
+    <div class="error" id="error-msg">Invalid username or password.</div>
+    <a href="/" class="back">← Back to way-buddy.in</a>
+  </div>
+
+  <script>
+    document.getElementById('password').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    async function doLogin() {
+      const btn = document.getElementById('login-btn');
+      const err = document.getElementById('error-msg');
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      err.classList.remove('show');
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = '/dashboard';
+        } else {
+          err.classList.add('show');
+          btn.disabled = false;
+          btn.textContent = 'Sign in';
+        }
+      } catch(e) {
+        err.textContent = 'Connection error. Please try again.';
+        err.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      }
+    }
+  </script>
+</body>
+</html>

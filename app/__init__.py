@@ -1,5 +1,5 @@
 ﻿import os
-from flask import Flask, send_from_directory, redirect
+from flask import Flask, send_from_directory, redirect, request, session, jsonify
 from flask_cors import CORS
 from .models import db
 
@@ -28,6 +28,9 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(notify_bp, url_prefix='/api')
 
+    ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
+    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'changeme')
+
     @app.route('/health')
     def health():
         return {'status': 'ok', 'service': 'waybuddy-api'}, 200
@@ -40,8 +43,25 @@ def create_app():
     def index_redirect():
         return redirect('/', 301)
 
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if request.method == 'POST':
+            data = request.get_json()
+            if data and data.get('username') == ADMIN_USERNAME and data.get('password') == ADMIN_PASSWORD:
+                session['admin'] = True
+                return jsonify({'success': True})
+            return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+        return send_from_directory(app.static_folder, 'login.html')
+
+    @app.route('/logout')
+    def logout():
+        session.pop('admin', None)
+        return redirect('/login')
+
     @app.route('/dashboard')
     def dashboard():
+        if not session.get('admin'):
+            return redirect('/login')
         return send_from_directory(app.static_folder, 'dashboard.html')
 
     @app.route('/dashboard.html')

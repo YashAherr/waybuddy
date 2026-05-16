@@ -1,3 +1,14 @@
+from flask import session
+
+def admin_required(f):
+    from functools import wraps
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('admin'):
+            return {'error': 'Unauthorized', 'success': False}, 401
+        return f(*args, **kwargs)
+    return decorated
+
 # app/routes/admin.py
 # ============================================================
 #  WayBuddy — Admin Routes
@@ -26,7 +37,19 @@ admin_bp = Blueprint('admin', __name__)
 
 # ── GET /api/admin/seekers ───────────────────────────────────
 
-@admin_bp.route('/seekers', methods=['GET'])
+
+from flask import session
+from functools import wraps
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('admin'):
+            return {'error': 'Unauthorized', 'success': False}, 401
+        return f(*args, **kwargs)
+    return decorated
+@admin_bp.route('/seekers')
+@admin_required, methods=['GET'])
 def get_seekers():
     """
     Returns all seekers ordered by travel date (soonest first).
@@ -51,7 +74,8 @@ def get_seekers():
 
 # ── GET /api/admin/helpers ───────────────────────────────────
 
-@admin_bp.route('/helpers', methods=['GET'])
+@admin_bp.route('/helpers')
+@admin_required, methods=['GET'])
 def get_helpers():
     """
     Returns all approved helpers ordered by travel date.
@@ -77,7 +101,8 @@ def get_helpers():
 
 # ── POST /api/admin/match ────────────────────────────────────
 
-@admin_bp.route('/match', methods=['POST'])
+@admin_bp.route('/match')
+@admin_required, methods=['POST'])
 def create_match():
     """
     Confirms a seeker-helper pairing.
@@ -153,7 +178,8 @@ def create_match():
 
 # ── POST /api/admin/approve-helper ──────────────────────────
 
-@admin_bp.route('/approve-helper', methods=['POST'])
+@admin_bp.route('/approve-helper')
+@admin_required, methods=['POST'])
 def approve_helper():
     """
     Approves a helper who is in 'pending_approval' status.
@@ -189,7 +215,8 @@ def approve_helper():
 
 # ── POST /api/admin/unmatch ──────────────────────────────────
 
-@admin_bp.route('/unmatch', methods=['POST'])
+@admin_bp.route('/unmatch')
+@admin_required, methods=['POST'])
 def unmatch():
     """
     Removes a confirmed match and sets both seeker and helper
@@ -225,7 +252,8 @@ def unmatch():
 
 # ── GET /api/admin/matches ───────────────────────────────────
 
-@admin_bp.route('/matches', methods=['GET'])
+@admin_bp.route('/matches')
+@admin_required, methods=['GET'])
 def get_matches():
     """
     Returns all confirmed matches for the dashboard
