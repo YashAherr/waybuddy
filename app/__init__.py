@@ -87,4 +87,27 @@ def create_app():
     def helper_form_redirect():
         return redirect('/helper-form', 301)
 
+
+    @app.route('/sitemap.xml')
+    def sitemap():
+        from flask import Response
+        xml = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://way-buddy.in/</loc></url>
+  <url><loc>https://way-buddy.in/seeker-form</loc></url>
+  <url><loc>https://way-buddy.in/helper-form</loc></url>
+</urlset>"""
+        return Response(xml, mimetype='application/xml')
+
+    @app.route('/robots.txt')
+    def robots():
+        from flask import Response
+        txt = """User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /login
+Disallow: /api/
+Sitemap: https://way-buddy.in/sitemap.xml"""
+        return Response(txt, mimetype='text/plain')
+
     return app
