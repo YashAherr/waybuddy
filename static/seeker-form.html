@@ -345,12 +345,16 @@
       font-size: 0.9rem;
       font-weight: 500;
     }
+  
+    /* Logo image alongside wordmark */
+    .logo { display: inline-flex; align-items: center; gap: 0.6rem; }
+    .brand-logo { height: 2rem; width: auto; flex-shrink: 0; }
   </style>
 </head>
 <body>
 
 <header class="page-header">
-  <a href="/index.html" class="logo">Way<span>Buddy</span></a>
+  <a href="/index.html" class="logo"><img src="/logo.png" alt="WayBuddy logo" class="brand-logo">Way<span>Buddy</span></a>
   <a href="/index.html" class="back-link">← Back to home</a>
 </header>
 

@@ -525,17 +525,13 @@
       .steps { grid-template-columns: 1fr; }
       footer { flex-direction: column; gap: 0.5rem; text-align: center; }
     }
-  
-    /* Logo image alongside wordmark */
-    .logo { display: inline-flex; align-items: center; gap: 0.6rem; }
-    .brand-logo { height: 2rem; width: auto; flex-shrink: 0; }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="logo"><img src="/logo.png" alt="WayBuddy logo" class="brand-logo">Way<span>Buddy</span></a>
+  <a href="#" class="logo">Way<span>Buddy</span></a>
   <ul class="nav-links">
     <li><a href="#how">How It Works</a></li>
     <li><a href="/dashboard">Admin</a></li>

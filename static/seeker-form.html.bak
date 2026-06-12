@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WayBuddy — Volunteer as a Helper</title>
+  <title>WayBuddy — I Need Travel Help</title>
   <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
@@ -14,14 +14,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream:   #F5F0E8;
-      --ink:     #1A1410;
-      --sage:    #4A6741;
-      --sage-lt: #EBF2E8;
-      --mist:    #E8E0D4;
-      --border:  #D4C8B8;
-      --error:   #C0392B;
-      --success: #2E7D32;
+      --cream:      #F5F0E8;
+      --ink:        #1A1410;
+      --terracotta: #C4603A;
+      --sage:       #4A6741;
+      --mist:       #E8E0D4;
+      --border:     #D4C8B8;
+      --error:      #C0392B;
+      --success:    #2E7D32;
     }
 
     html, body {
@@ -48,7 +48,7 @@
       text-decoration: none;
     }
 
-    .logo span { color: #7AB86A; }
+    .logo span { color: var(--terracotta); }
 
     .back-link {
       font-size: 0.82rem;
@@ -62,7 +62,7 @@
 
     /* ── HERO ── */
     .form-hero {
-      background: var(--sage);
+      background: var(--terracotta);
       padding: 3rem 2rem 2.5rem;
       text-align: center;
       position: relative;
@@ -70,7 +70,7 @@
     }
 
     .form-hero::before {
-      content: '🤝';
+      content: '✈';
       position: absolute;
       font-size: 12rem;
       opacity: 0.06;
@@ -109,7 +109,7 @@
       font-weight: 500;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--sage);
+      color: var(--terracotta);
       margin: 2rem 0 1rem;
       display: flex;
       align-items: center;
@@ -123,21 +123,20 @@
       background: var(--border);
     }
 
-    .section-note {
-      font-size: 0.8rem;
-      color: #888;
-      margin: -0.5rem 0 1rem;
-      line-height: 1.5;
-    }
-
     /* ── FORM FIELDS ── */
     .field-group {
       display: grid;
       gap: 1rem;
+      margin-bottom: 0;
     }
 
-    .field-group.two-col { grid-template-columns: 1fr 1fr; }
-    .field-group.three-col { grid-template-columns: 1fr 1fr 1fr; }
+    .field-group.two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .field-group.three-col {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
 
     @media (max-width: 560px) {
       .field-group.two-col,
@@ -157,7 +156,10 @@
       letter-spacing: 0.02em;
     }
 
-    label .req { color: var(--sage); margin-left: 2px; }
+    label .req {
+      color: var(--terracotta);
+      margin-left: 2px;
+    }
 
     input, select, textarea {
       font-family: 'DM Sans', sans-serif;
@@ -174,8 +176,8 @@
     }
 
     input:focus, select:focus, textarea:focus {
-      border-color: var(--sage);
-      box-shadow: 0 0 0 3px rgba(74,103,65,0.12);
+      border-color: var(--terracotta);
+      box-shadow: 0 0 0 3px rgba(196,96,58,0.12);
     }
 
     input::placeholder, textarea::placeholder {
@@ -214,14 +216,14 @@
       user-select: none;
     }
 
-    .checkbox-item:hover { border-color: var(--sage); }
+    .checkbox-item:hover { border-color: var(--terracotta); }
 
     .checkbox-item input[type="checkbox"] {
       width: 16px;
       height: 16px;
       min-width: 16px;
       padding: 0;
-      accent-color: var(--sage);
+      accent-color: var(--terracotta);
       cursor: pointer;
       border: none;
       box-shadow: none;
@@ -232,60 +234,23 @@
       border-color: transparent;
     }
 
-    .checkbox-item span { font-size: 0.83rem; color: var(--ink); line-height: 1.2; }
+    .checkbox-item span {
+      font-size: 0.83rem;
+      color: var(--ink);
+      line-height: 1.2;
+    }
 
     .checkbox-item:has(input:checked) {
-      border-color: var(--sage);
-      background: rgba(74,103,65,0.06);
+      border-color: var(--terracotta);
+      background: rgba(196,96,58,0.06);
     }
 
-    .hint { font-size: 0.75rem; color: #888; margin-top: 0.2rem; }
-
-    /* ── OPTIONAL FLIGHT TOGGLE ── */
-    .toggle-section {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 0;
-    }
-
-    .toggle-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.9rem 1rem;
-      background: #fff;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .toggle-header span {
-      font-size: 0.88rem;
-      font-weight: 500;
-      color: var(--ink);
-    }
-
-    .toggle-header small {
+    /* ── FIELD HINT ── */
+    .hint {
       font-size: 0.75rem;
       color: #888;
-      font-weight: 400;
+      margin-top: 0.2rem;
     }
-
-    .toggle-chevron {
-      font-size: 0.75rem;
-      color: #888;
-      transition: transform 0.2s;
-    }
-
-    .toggle-body {
-      display: none;
-      padding: 1rem;
-      background: var(--cream);
-      border-top: 1px solid var(--border);
-    }
-
-    .toggle-body.open { display: block; }
-    .toggle-chevron.open { transform: rotate(180deg); }
 
     /* ── SUBMIT BUTTON ── */
     .submit-area {
@@ -294,7 +259,7 @@
     }
 
     .submit-btn {
-      background: var(--sage);
+      background: var(--terracotta);
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -311,9 +276,13 @@
     .submit-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .submit-note { font-size: 0.78rem; color: #888; margin-top: 0.75rem; }
+    .submit-note {
+      font-size: 0.78rem;
+      color: #888;
+      margin-top: 0.75rem;
+    }
 
-    /* ── BANNER ── */
+    /* ── TOAST / BANNER ── */
     .banner {
       display: none;
       border-radius: 8px;
@@ -338,9 +307,18 @@
     }
 
     /* ── SUCCESS SCREEN ── */
-    .success-screen { display: none; text-align: center; padding: 3rem 1.5rem; }
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 3rem 1.5rem;
+    }
+
     .success-screen.show { display: block; }
-    .success-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    .success-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
 
     .success-screen h2 {
       font-family: 'Playfair Display', serif;
@@ -352,7 +330,7 @@
     .success-screen p {
       font-size: 1rem;
       color: #666;
-      max-width: 400px;
+      max-width: 380px;
       margin: 0 auto 2rem;
       line-height: 1.6;
     }
@@ -367,36 +345,32 @@
       font-size: 0.9rem;
       font-weight: 500;
     }
-  
-    /* Logo image alongside wordmark */
-    .logo { display: inline-flex; align-items: center; gap: 0.6rem; }
-    .brand-logo { height: 2rem; width: auto; flex-shrink: 0; }
   </style>
 </head>
 <body>
 
 <header class="page-header">
-  <a href="/index.html" class="logo"><img src="/logo.png" alt="WayBuddy logo" class="brand-logo">Way<span>Buddy</span></a>
+  <a href="/index.html" class="logo">Way<span>Buddy</span></a>
   <a href="/index.html" class="back-link">← Back to home</a>
 </header>
 
 <div class="form-hero">
-  <h1>I want to help</h1>
-  <p>Register as a volunteer helper and we'll match you with a solo traveller who needs your support.</p>
+  <h1>I need travel help</h1>
+  <p>Tell us about your journey and we'll match you with a volunteer helper before your flight.</p>
 </div>
 
 <div class="form-container">
 
   <!-- SUCCESS SCREEN -->
   <div class="success-screen" id="success-screen">
-    <div class="success-icon">🤝</div>
-    <h2>Thank you for volunteering!</h2>
-    <p>We've received your registration. Our team will review your profile and reach out once we have a suitable match for you.</p>
+    <div class="success-icon">✅</div>
+    <h2>You're registered!</h2>
+    <p>We've received your details. Our team will review your request and reach out with a matched helper before your travel date.</p>
     <a href="/index.html" class="home-link">Back to home</a>
   </div>
 
   <!-- FORM -->
-  <form id="helper-form" novalidate>
+  <form id="seeker-form" novalidate>
 
     <div id="banner" class="banner"></div>
 
@@ -405,7 +379,7 @@
     <div class="field-group">
       <div class="field">
         <label for="name">Full name <span class="req">*</span></label>
-        <input type="text" id="name" name="name" placeholder="e.g. James Carroll" required/>
+        <input type="text" id="name" name="name" placeholder="e.g. Rahul Sharma" required/>
       </div>
     </div>
 
@@ -416,14 +390,14 @@
       </div>
       <div class="field">
         <label for="email">Email address</label>
-        <input type="email" id="email" name="email" placeholder="james@email.com"/>
+        <input type="email" id="email" name="email" placeholder="abc@email.com"/>
       </div>
     </div>
 
     <div class="field-group two-col" style="margin-top:1rem">
       <div class="field">
         <label for="age">Age <span class="req">*</span></label>
-        <input type="number" id="age" name="age" min="18" max="120" placeholder="34" required/>
+        <input type="number" id="age" name="age" min="1" max="120" placeholder="26" required/>
       </div>
       <div class="field">
         <label for="gender">Gender</label>
@@ -437,48 +411,30 @@
       </div>
     </div>
 
-    <!-- AIRPORT -->
-    <div class="section-label">Airport availability</div>
+    <!-- FLIGHT DETAILS -->
+    <div class="section-label">Flight details</div>
     <div class="field-group">
       <div class="field">
-        <label for="based_at_airport">Which airport are you based at or travelling through? <span class="req">*</span></label>
-        <input type="text" id="based_at_airport" name="based_at_airport" placeholder="e.g. Mumbai (BOM), Heathrow (LHR)" required/>
-        <span class="hint">Enter the main airport where you can offer help.</span>
+        <label for="flight_number">Flight number <span class="req">*</span></label>
+        <input type="text" id="flight_number" name="flight_number" placeholder="e.g. AI 131" required/>
       </div>
     </div>
 
-    <!-- OPTIONAL FLIGHT DETAILS -->
-    <div class="section-label">Your own flight details</div>
-    <p class="section-note">Only fill this in if you are travelling yourself and want to be matched with a seeker on the same flight or route.</p>
-
-    <div class="toggle-section">
-      <div class="toggle-header" onclick="toggleFlight()">
-        <span>I am travelling and want to share my flight details <small>(optional)</small></span>
-        <span class="toggle-chevron" id="chevron">▼</span>
+    <div class="field-group two-col" style="margin-top:1rem">
+      <div class="field">
+        <label for="departure_airport">Departing from <span class="req">*</span></label>
+        <input type="text" id="departure_airport" name="departure_airport" placeholder="e.g. Mumbai (BOM)" required/>
       </div>
-      <div class="toggle-body" id="flight-body">
-        <div class="field-group">
-          <div class="field">
-            <label for="flight_number">Flight number</label>
-            <input type="text" id="flight_number" name="flight_number" placeholder="e.g. BA 118"/>
-          </div>
-        </div>
-        <div class="field-group two-col" style="margin-top:1rem">
-          <div class="field">
-            <label for="departure_airport">Departing from</label>
-            <input type="text" id="departure_airport" name="departure_airport" placeholder="e.g. London Heathrow (LHR)"/>
-          </div>
-          <div class="field">
-            <label for="arrival_airport">Arriving at</label>
-            <input type="text" id="arrival_airport" name="arrival_airport" placeholder="e.g. Mumbai (BOM)"/>
-          </div>
-        </div>
-        <div class="field-group" style="margin-top:1rem">
-          <div class="field">
-            <label for="travel_date">Travel date</label>
-            <input type="date" id="travel_date" name="travel_date"/>
-          </div>
-        </div>
+      <div class="field">
+        <label for="arrival_airport">Arriving at <span class="req">*</span></label>
+        <input type="text" id="arrival_airport" name="arrival_airport" placeholder="e.g. London Heathrow (LHR)" required/>
+      </div>
+    </div>
+
+    <div class="field-group" style="margin-top:1rem">
+      <div class="field">
+        <label for="travel_date">Travel date <span class="req">*</span></label>
+        <input type="date" id="travel_date" name="travel_date" required/>
       </div>
     </div>
 
@@ -497,40 +453,38 @@
         <label class="checkbox-item"><input type="checkbox" name="languages" value="Gujarati"/><span>Gujarati</span></label>
         <label class="checkbox-item"><input type="checkbox" name="languages" value="Punjabi"/><span>Punjabi</span></label>
         <label class="checkbox-item"><input type="checkbox" name="languages" value="Arabic"/><span>Arabic</span></label>
-        <label class="checkbox-item"><input type="checkbox" name="languages" value="Spanish"/><span>Spanish</span></label>
-        <label class="checkbox-item"><input type="checkbox" name="languages" value="French"/><span>French</span></label>
         <label class="checkbox-item"><input type="checkbox" name="languages" value="Other"/><span>Other</span></label>
       </div>
     </div>
 
-    <!-- SKILLS -->
-    <div class="section-label">How can you help?</div>
+    <!-- HELP NEEDED -->
+    <div class="section-label">What kind of help do you need?</div>
     <div class="field">
       <div class="checkbox-group">
-        <label class="checkbox-item"><input type="checkbox" name="skills" value="Wheelchair assistance"/><span>Wheelchair assistance</span></label>
-        <label class="checkbox-item"><input type="checkbox" name="skills" value="Airport navigation"/><span>Airport navigation</span></label>
-        <label class="checkbox-item"><input type="checkbox" name="skills" value="Language translation"/><span>Language translation</span></label>
-        <label class="checkbox-item"><input type="checkbox" name="skills" value="Form filling"/><span>Form filling</span></label>
-        <label class="checkbox-item"><input type="checkbox" name="skills" value="Elderly care"/><span>Elderly care</span></label>
-        <label class="checkbox-item"><input type="checkbox" name="skills" value="First-timer guidance"/><span>First-timer guidance</span></label>
-        <label class="checkbox-item"><input type="checkbox" name="skills" value="Immigration help"/><span>Immigration help</span></label>
-        <label class="checkbox-item"><input type="checkbox" name="skills" value="General companionship"/><span>General companionship</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Wheelchair assistance"/><span>Wheelchair assistance</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Airport navigation"/><span>Airport navigation</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Language translation"/><span>Language translation</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Immigration and forms"/><span>Immigration and forms</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Elderly assistance"/><span>Elderly assistance</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Security help"/><span>Security help</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="Boarding gate help"/><span>Boarding gate help</span></label>
+        <label class="checkbox-item"><input type="checkbox" name="help_needed" value="General companionship"/><span>General companionship</span></label>
       </div>
     </div>
 
-    <!-- NOTES -->
-    <div class="section-label">Anything else?</div>
+    <!-- ADDITIONAL NOTES -->
+    <div class="section-label">Anything else we should know?</div>
     <div class="field">
-      <textarea id="notes" name="notes" placeholder="Tell us about your airport experience, any certifications, or anything that would help us understand how you can best help travellers..."></textarea>
-      <span class="hint">Optional — but helpful for matching you with the right seeker.</span>
+      <textarea id="notes" name="notes" placeholder="Tell us more about your situation, any specific concerns, or anything that would help us find the right match for you..."></textarea>
+      <span class="hint">Optional — but the more detail you share, the better we can match you.</span>
     </div>
 
     <!-- SUBMIT -->
     <div class="submit-area">
       <button type="submit" class="submit-btn" id="submit-btn">
-        Register as a helper →
+        Submit my request →
       </button>
-      <p class="submit-note">Your profile will be reviewed by our team before being added to the matching pool.</p>
+      <p class="submit-note">Your information is kept private and only shared with your matched helper.</p>
     </div>
 
   </form>
@@ -538,25 +492,18 @@
 
 <script>
   // ── SET MIN DATE TO TODAY ──────────────────────────────────
+  // Prevents selecting a past travel date
   const today = new Date().toISOString().split('T')[0];
-  const travelDateInput = document.getElementById('travel_date');
-  if (travelDateInput) travelDateInput.setAttribute('min', today);
-
-  // ── TOGGLE FLIGHT SECTION ─────────────────────────────────
-  function toggleFlight() {
-    const body    = document.getElementById('flight-body');
-    const chevron = document.getElementById('chevron');
-    body.classList.toggle('open');
-    chevron.classList.toggle('open');
-  }
+  document.getElementById('travel_date').setAttribute('min', today);
 
   // ── FORM SUBMISSION ───────────────────────────────────────
-  document.getElementById('helper-form').addEventListener('submit', async function(e) {
+  document.getElementById('seeker-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const btn    = document.getElementById('submit-btn');
     const banner = document.getElementById('banner');
 
+    // Reset banner
     banner.className = 'banner';
     banner.textContent = '';
 
@@ -567,7 +514,6 @@
       email:             document.getElementById('email').value.trim(),
       age:               document.getElementById('age').value.trim(),
       gender:            document.getElementById('gender').value,
-      based_at_airport:  document.getElementById('based_at_airport').value.trim(),
       flight_number:     document.getElementById('flight_number').value.trim(),
       departure_airport: document.getElementById('departure_airport').value.trim(),
       arrival_airport:   document.getElementById('arrival_airport').value.trim(),
@@ -575,14 +521,17 @@
       notes:             document.getElementById('notes').value.trim(),
     };
 
-    // Collect checkboxes
-    data.languages = [...document.querySelectorAll('input[name="languages"]:checked')]
+    // Collect checked checkboxes
+    const languages = [...document.querySelectorAll('input[name="languages"]:checked')]
       .map(cb => cb.value).join(', ');
-    data.skills = [...document.querySelectorAll('input[name="skills"]:checked')]
+    const help_needed = [...document.querySelectorAll('input[name="help_needed"]:checked')]
       .map(cb => cb.value).join(', ');
 
-    // ── VALIDATION ─────────────────────────────────────────
-    const required = ['name', 'phone', 'age', 'based_at_airport'];
+    data.languages  = languages;
+    data.help_needed = help_needed;
+
+    // ── CLIENT-SIDE VALIDATION ─────────────────────────────
+    const required = ['name','phone','age','flight_number','departure_airport','arrival_airport','travel_date'];
     const missing  = required.filter(f => !data[f]);
 
     if (missing.length > 0) {
@@ -597,7 +546,7 @@
     btn.textContent = 'Submitting…';
 
     try {
-      const res = await fetch('/api/register/helper', {
+      const res = await fetch('/api/register/seeker', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(data)
@@ -606,7 +555,8 @@
       const result = await res.json();
 
       if (result.success) {
-        document.getElementById('helper-form').style.display = 'none';
+        // Show success screen, hide form
+        document.getElementById('seeker-form').style.display = 'none';
         document.getElementById('success-screen').classList.add('show');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
@@ -614,7 +564,7 @@
         banner.textContent = result.error || 'Something went wrong. Please try again.';
         banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
         btn.disabled    = false;
-        btn.textContent = 'Register as a helper →';
+        btn.textContent = 'Submit my request →';
       }
 
     } catch (err) {
@@ -622,7 +572,7 @@
       banner.textContent = 'Could not connect to the server. Please check your connection and try again.';
       banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
       btn.disabled    = false;
-      btn.textContent = 'Register as a helper →';
+      btn.textContent = 'Submit my request →';
     }
   });
 </script>
