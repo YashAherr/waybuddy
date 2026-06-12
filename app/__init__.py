@@ -47,7 +47,11 @@ def create_app():
 
     @app.route('/favicon.ico')
     def favicon():
-        return send_from_directory('static/favicon', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+        return send_from_directory(
+            os.path.join(app.static_folder, 'favicon'),
+            'favicon.ico',
+            mimetype='image/vnd.microsoft.icon'
+        )
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
