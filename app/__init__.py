@@ -45,6 +45,10 @@ def create_app():
     def index_redirect():
         return redirect('/', 301)
 
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory('static/favicon', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'POST':
