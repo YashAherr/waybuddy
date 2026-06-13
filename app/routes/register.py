@@ -9,18 +9,21 @@
 #
 #  Both endpoints:
 #    1. Validate that required fields are present
-#    2. Create a new database row
-#    3. Return JSON confirming success or describing the error
+#    2. Validate phone format and email format
+#    3. Check for duplicate active registrations
+#    4. Create a new database row
+#    5. Return JSON confirming success or describing the error
 # ============================================================
 
-from flask        import Blueprint, request, jsonify
-from ..models     import db, Seeker, Helper
-from datetime     import datetime
+from flask    import Blueprint, request, jsonify
+from ..models import db, Seeker, Helper
+from datetime import datetime
+from app.utils.validation import validate_indian_phone, validate_email, check_duplicate
 
 register_bp = Blueprint('register', __name__)
 
 
-# ── HELPER FUNCTION ─────────────────────────────────────────
+# ── HELPER FUNCTION ──────────────────────────────────────────────────────────
 
 def parse_date(date_str):
     """
@@ -36,7 +39,7 @@ def parse_date(date_str):
         return None
 
 
-# ── POST /api/register/seeker ────────────────────────────────
+# ── POST /api/register/seeker ────────────────────────────────────────────────
 
 @register_bp.route('/register/seeker', methods=['POST'])
 def register_seeker():
@@ -46,8 +49,12 @@ def register_seeker():
     """
     data = request.get_json(silent=True) or request.form.to_dict()
 
-    # ── VALIDATION ───────────────────────────────────────────
-    # Check that every required field is present and non-empty.
+    # ── HONEYPOT (bot trap) ──────────────────────────────────────────────────
+    # Hidden field — humans never fill it; bots usually do.
+    if data.get('website'):
+        return jsonify({'success': False, 'error': 'Registration failed.'}), 400
+
+    # ── REQUIRED FIELD CHECK ─────────────────────────────────────────────────
     required = [
         'name', 'phone', 'flight_number',
         'departure_airport', 'arrival_airport', 'travel_date'
@@ -59,12 +66,28 @@ def register_seeker():
             'error': f'Missing required fields: {", ".join(missing)}'
         }), 400
 
-    # ── CREATE SEEKER ROW ────────────────────────────────────
+    # ── PHONE VALIDATION ─────────────────────────────────────────────────────
+    phone, phone_err = validate_indian_phone(data.get('phone', ''))
+    if phone_err:
+        return jsonify({'success': False, 'error': phone_err}), 422
+
+    # ── EMAIL VALIDATION ─────────────────────────────────────────────────────
+    email = data.get('email', '').strip().lower() or None
+    email_ok, email_err = validate_email(email or '')
+    if not email_ok:
+        return jsonify({'success': False, 'error': email_err}), 422
+
+    # ── DUPLICATE CHECK ──────────────────────────────────────────────────────
+    dup_err = check_duplicate(Seeker, db.session, phone, email)
+    if dup_err:
+        return jsonify({'success': False, 'error': dup_err}), 409
+
+    # ── CREATE SEEKER ROW ────────────────────────────────────────────────────
     try:
         seeker = Seeker(
             name              = data['name'].strip(),
-            phone             = data['phone'].strip(),
-            email             = data.get('email', '').strip() or None,
+            phone             = phone,
+            email             = email,
             age               = int(data['age']) if data.get('age') else None,
             gender            = data.get('gender', '').strip() or None,
             flight_number     = data['flight_number'].strip().upper(),
@@ -72,7 +95,6 @@ def register_seeker():
             arrival_airport   = data['arrival_airport'].strip(),
             travel_date       = parse_date(data['travel_date']),
             departure_time    = data.get('departure_time', '').strip() or None,
-            # Multi-select fields arrive as comma-separated strings
             languages         = data.get('languages', '').strip() or None,
             help_needed       = data.get('help_needed', '').strip() or None,
             notes             = data.get('notes', '').strip() or None,
@@ -96,7 +118,7 @@ def register_seeker():
         }), 500
 
 
-# ── POST /api/register/helper ────────────────────────────────
+# ── POST /api/register/helper ────────────────────────────────────────────────
 
 @register_bp.route('/register/helper', methods=['POST'])
 def register_helper():
@@ -108,7 +130,11 @@ def register_helper():
     """
     data = request.get_json(silent=True) or request.form.to_dict()
 
-    # ── VALIDATION ───────────────────────────────────────────
+    # ── HONEYPOT (bot trap) ──────────────────────────────────────────────────
+    if data.get('website'):
+        return jsonify({'success': False, 'error': 'Registration failed.'}), 400
+
+    # ── REQUIRED FIELD CHECK ─────────────────────────────────────────────────
     required = ['name', 'phone']
     missing = [f for f in required if not data.get(f, '').strip()]
     if missing:
@@ -117,12 +143,28 @@ def register_helper():
             'error': f'Missing required fields: {", ".join(missing)}'
         }), 400
 
-    # ── CREATE HELPER ROW ────────────────────────────────────
+    # ── PHONE VALIDATION ─────────────────────────────────────────────────────
+    phone, phone_err = validate_indian_phone(data.get('phone', ''))
+    if phone_err:
+        return jsonify({'success': False, 'error': phone_err}), 422
+
+    # ── EMAIL VALIDATION ─────────────────────────────────────────────────────
+    email = data.get('email', '').strip().lower() or None
+    email_ok, email_err = validate_email(email or '')
+    if not email_ok:
+        return jsonify({'success': False, 'error': email_err}), 422
+
+    # ── DUPLICATE CHECK ──────────────────────────────────────────────────────
+    dup_err = check_duplicate(Helper, db.session, phone, email)
+    if dup_err:
+        return jsonify({'success': False, 'error': dup_err}), 409
+
+    # ── CREATE HELPER ROW ────────────────────────────────────────────────────
     try:
         helper = Helper(
             name              = data['name'].strip(),
-            phone             = data['phone'].strip(),
-            email             = data.get('email', '').strip() or None,
+            phone             = phone,
+            email             = email,
             age               = int(data['age']) if data.get('age') else None,
             gender            = data.get('gender', '').strip() or None,
             flight_number     = data.get('flight_number', '').strip().upper() or None,

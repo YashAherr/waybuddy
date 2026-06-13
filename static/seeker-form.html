@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WayBuddy — I Need Travel Help</title>
+  <title>WayBuddy â€” I Need Travel Help</title>
   <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
@@ -31,7 +31,7 @@
       color: var(--ink);
     }
 
-    /* ── HEADER ── */
+    /* â”€â”€ HEADER â”€â”€ */
     .page-header {
       background: var(--ink);
       padding: 1.25rem 2rem;
@@ -60,7 +60,7 @@
 
     .back-link:hover { opacity: 1; }
 
-    /* ── HERO ── */
+    /* â”€â”€ HERO â”€â”€ */
     .form-hero {
       background: var(--terracotta);
       padding: 3rem 2rem 2.5rem;
@@ -70,7 +70,7 @@
     }
 
     .form-hero::before {
-      content: '✈';
+      content: 'âœˆ';
       position: absolute;
       font-size: 12rem;
       opacity: 0.06;
@@ -96,14 +96,14 @@
       margin: 0 auto;
     }
 
-    /* ── FORM CONTAINER ── */
+    /* â”€â”€ FORM CONTAINER â”€â”€ */
     .form-container {
       max-width: 680px;
       margin: 0 auto;
       padding: 2.5rem 1.5rem 4rem;
     }
 
-    /* ── SECTION DIVIDERS ── */
+    /* â”€â”€ SECTION DIVIDERS â”€â”€ */
     .section-label {
       font-size: 0.7rem;
       font-weight: 500;
@@ -123,7 +123,7 @@
       background: var(--border);
     }
 
-    /* ── FORM FIELDS ── */
+    /* â”€â”€ FORM FIELDS â”€â”€ */
     .field-group {
       display: grid;
       gap: 1rem;
@@ -195,7 +195,7 @@
 
     textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
-    /* ── CHECKBOX GROUP ── */
+    /* â”€â”€ CHECKBOX GROUP â”€â”€ */
     .checkbox-group {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -245,14 +245,14 @@
       background: rgba(196,96,58,0.06);
     }
 
-    /* ── FIELD HINT ── */
+    /* â”€â”€ FIELD HINT â”€â”€ */
     .hint {
       font-size: 0.75rem;
       color: #888;
       margin-top: 0.2rem;
     }
 
-    /* ── SUBMIT BUTTON ── */
+    /* â”€â”€ SUBMIT BUTTON â”€â”€ */
     .submit-area {
       margin-top: 2.5rem;
       text-align: center;
@@ -282,7 +282,7 @@
       margin-top: 0.75rem;
     }
 
-    /* ── TOAST / BANNER ── */
+    /* â”€â”€ TOAST / BANNER â”€â”€ */
     .banner {
       display: none;
       border-radius: 8px;
@@ -306,7 +306,7 @@
       color: var(--error);
     }
 
-    /* ── SUCCESS SCREEN ── */
+    /* â”€â”€ SUCCESS SCREEN â”€â”€ */
     .success-screen {
       display: none;
       text-align: center;
@@ -355,7 +355,7 @@
 
 <header class="page-header">
   <a href="/index.html" class="logo"><img src="/logo.png" alt="WayBuddy logo" class="brand-logo">Way<span>Buddy</span></a>
-  <a href="/index.html" class="back-link">← Back to home</a>
+  <a href="/index.html" class="back-link">â† Back to home</a>
 </header>
 
 <div class="form-hero">
@@ -367,7 +367,7 @@
 
   <!-- SUCCESS SCREEN -->
   <div class="success-screen" id="success-screen">
-    <div class="success-icon">✅</div>
+    <div class="success-icon">âœ…</div>
     <h2>You're registered!</h2>
     <p>We've received your details. Our team will review your request and reach out with a matched helper before your travel date.</p>
     <a href="/index.html" class="home-link">Back to home</a>
@@ -390,7 +390,8 @@
     <div class="field-group two-col" style="margin-top:1rem">
       <div class="field">
         <label for="phone">Phone number <span class="req">*</span></label>
-        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required/>
+        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" pattern="[+0-9\s\-]{10,15}" autocomplete="tel" required/>
+        <span class="hint">Enter 10-digit Indian mobile number. e.g. 98765 43210 or +91 98765 43210</span>
       </div>
       <div class="field">
         <label for="email">Email address</label>
@@ -480,13 +481,14 @@
     <div class="section-label">Anything else we should know?</div>
     <div class="field">
       <textarea id="notes" name="notes" placeholder="Tell us more about your situation, any specific concerns, or anything that would help us find the right match for you..."></textarea>
-      <span class="hint">Optional — but the more detail you share, the better we can match you.</span>
+      <span class="hint">Optional â€” but the more detail you share, the better we can match you.</span>
     </div>
 
     <!-- SUBMIT -->
+    <input type="text" name="website" id="website" style="display:none;position:absolute;left:-9999px" tabindex="-1" autocomplete="off" aria-hidden="true">
     <div class="submit-area">
       <button type="submit" class="submit-btn" id="submit-btn">
-        Submit my request →
+        Submit my request â†’
       </button>
       <p class="submit-note">Your information is kept private and only shared with your matched helper.</p>
     </div>
@@ -495,12 +497,12 @@
 </div>
 
 <script>
-  // ── SET MIN DATE TO TODAY ──────────────────────────────────
+  // â”€â”€ SET MIN DATE TO TODAY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // Prevents selecting a past travel date
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('travel_date').setAttribute('min', today);
 
-  // ── FORM SUBMISSION ───────────────────────────────────────
+  // â”€â”€ FORM SUBMISSION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   document.getElementById('seeker-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -511,7 +513,7 @@
     banner.className = 'banner';
     banner.textContent = '';
 
-    // ── COLLECT FORM DATA ──────────────────────────────────
+    // â”€â”€ COLLECT FORM DATA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const data = {
       name:              document.getElementById('name').value.trim(),
       phone:             document.getElementById('phone').value.trim(),
@@ -534,7 +536,31 @@
     data.languages  = languages;
     data.help_needed = help_needed;
 
-    // ── CLIENT-SIDE VALIDATION ─────────────────────────────
+    // â”€â”€ CLIENT-SIDE VALIDATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // â”€â”€ PHONE FORMAT VALIDATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const phoneRaw = data.phone.replace(/[\s\-\(\)]/g, '');
+    const phoneDigits = phoneRaw.startsWith('+91') ? phoneRaw.slice(3)
+                      : phoneRaw.startsWith('91') && phoneRaw.length === 12 ? phoneRaw.slice(2)
+                      : phoneRaw.startsWith('0') && phoneRaw.length === 11  ? phoneRaw.slice(1)
+                      : phoneRaw;
+    if (!/^[6-9]\d{9}$/.test(phoneDigits)) {
+      banner.className = 'banner error';
+      banner.textContent = 'Please enter a valid 10-digit Indian mobile number (starting with 6-9).';
+      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // â”€â”€ EMAIL FORMAT VALIDATION (optional field) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    if (data.email) {
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email);
+      if (!emailOk) {
+        banner.className = 'banner error';
+        banner.textContent = 'Please enter a valid email address.';
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+    }
+
     const required = ['name','phone','age','flight_number','departure_airport','arrival_airport','travel_date'];
     const missing  = required.filter(f => !data[f]);
 
@@ -545,9 +571,9 @@
       return;
     }
 
-    // ── SUBMIT TO FLASK API ────────────────────────────────
+    // â”€â”€ SUBMIT TO FLASK API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     btn.disabled    = true;
-    btn.textContent = 'Submitting…';
+    btn.textContent = 'Submittingâ€¦';
 
     try {
       const res = await fetch('/api/register/seeker', {
@@ -568,7 +594,7 @@
         banner.textContent = result.error || 'Something went wrong. Please try again.';
         banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
         btn.disabled    = false;
-        btn.textContent = 'Submit my request →';
+        btn.textContent = 'Submit my request â†’';
       }
 
     } catch (err) {
@@ -576,7 +602,7 @@
       banner.textContent = 'Could not connect to the server. Please check your connection and try again.';
       banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
       btn.disabled    = false;
-      btn.textContent = 'Submit my request →';
+      btn.textContent = 'Submit my request â†’';
     }
   });
 </script>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WayBuddy — Volunteer as a Helper</title>
+  <title>WayBuddy â€” Volunteer as a Helper</title>
   <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
@@ -31,7 +31,7 @@
       color: var(--ink);
     }
 
-    /* ── HEADER ── */
+    /* â”€â”€ HEADER â”€â”€ */
     .page-header {
       background: var(--ink);
       padding: 1.25rem 2rem;
@@ -60,7 +60,7 @@
 
     .back-link:hover { opacity: 1; }
 
-    /* ── HERO ── */
+    /* â”€â”€ HERO â”€â”€ */
     .form-hero {
       background: var(--sage);
       padding: 3rem 2rem 2.5rem;
@@ -70,7 +70,7 @@
     }
 
     .form-hero::before {
-      content: '🤝';
+      content: 'ðŸ¤';
       position: absolute;
       font-size: 12rem;
       opacity: 0.06;
@@ -96,14 +96,14 @@
       margin: 0 auto;
     }
 
-    /* ── FORM CONTAINER ── */
+    /* â”€â”€ FORM CONTAINER â”€â”€ */
     .form-container {
       max-width: 680px;
       margin: 0 auto;
       padding: 2.5rem 1.5rem 4rem;
     }
 
-    /* ── SECTION DIVIDERS ── */
+    /* â”€â”€ SECTION DIVIDERS â”€â”€ */
     .section-label {
       font-size: 0.7rem;
       font-weight: 500;
@@ -130,7 +130,7 @@
       line-height: 1.5;
     }
 
-    /* ── FORM FIELDS ── */
+    /* â”€â”€ FORM FIELDS â”€â”€ */
     .field-group {
       display: grid;
       gap: 1rem;
@@ -193,7 +193,7 @@
 
     textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
-    /* ── CHECKBOX GROUP ── */
+    /* â”€â”€ CHECKBOX GROUP â”€â”€ */
     .checkbox-group {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -241,7 +241,7 @@
 
     .hint { font-size: 0.75rem; color: #888; margin-top: 0.2rem; }
 
-    /* ── OPTIONAL FLIGHT TOGGLE ── */
+    /* â”€â”€ OPTIONAL FLIGHT TOGGLE â”€â”€ */
     .toggle-section {
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -287,7 +287,7 @@
     .toggle-body.open { display: block; }
     .toggle-chevron.open { transform: rotate(180deg); }
 
-    /* ── SUBMIT BUTTON ── */
+    /* â”€â”€ SUBMIT BUTTON â”€â”€ */
     .submit-area {
       margin-top: 2.5rem;
       text-align: center;
@@ -313,7 +313,7 @@
 
     .submit-note { font-size: 0.78rem; color: #888; margin-top: 0.75rem; }
 
-    /* ── BANNER ── */
+    /* â”€â”€ BANNER â”€â”€ */
     .banner {
       display: none;
       border-radius: 8px;
@@ -337,7 +337,7 @@
       color: var(--error);
     }
 
-    /* ── SUCCESS SCREEN ── */
+    /* â”€â”€ SUCCESS SCREEN â”€â”€ */
     .success-screen { display: none; text-align: center; padding: 3rem 1.5rem; }
     .success-screen.show { display: block; }
     .success-icon { font-size: 3rem; margin-bottom: 1rem; }
@@ -377,7 +377,7 @@
 
 <header class="page-header">
   <a href="/index.html" class="logo"><img src="/logo.png" alt="WayBuddy logo" class="brand-logo">Way<span>Buddy</span></a>
-  <a href="/index.html" class="back-link">← Back to home</a>
+  <a href="/index.html" class="back-link">â† Back to home</a>
 </header>
 
 <div class="form-hero">
@@ -389,7 +389,7 @@
 
   <!-- SUCCESS SCREEN -->
   <div class="success-screen" id="success-screen">
-    <div class="success-icon">🤝</div>
+    <div class="success-icon">ðŸ¤</div>
     <h2>Thank you for volunteering!</h2>
     <p>We've received your registration. Our team will review your profile and reach out once we have a suitable match for you.</p>
     <a href="/index.html" class="home-link">Back to home</a>
@@ -412,7 +412,8 @@
     <div class="field-group two-col" style="margin-top:1rem">
       <div class="field">
         <label for="phone">Phone number <span class="req">*</span></label>
-        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required/>
+        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" pattern="[+0-9\s\-]{10,15}" autocomplete="tel" required/>
+        <span class="hint">Enter 10-digit Indian mobile number. e.g. 98765 43210 or +91 98765 43210</span>
       </div>
       <div class="field">
         <label for="email">Email address</label>
@@ -454,7 +455,7 @@
     <div class="toggle-section">
       <div class="toggle-header" onclick="toggleFlight()">
         <span>I am travelling and want to share my flight details <small>(optional)</small></span>
-        <span class="toggle-chevron" id="chevron">▼</span>
+        <span class="toggle-chevron" id="chevron">â–¼</span>
       </div>
       <div class="toggle-body" id="flight-body">
         <div class="field-group">
@@ -522,13 +523,14 @@
     <div class="section-label">Anything else?</div>
     <div class="field">
       <textarea id="notes" name="notes" placeholder="Tell us about your airport experience, any certifications, or anything that would help us understand how you can best help travellers..."></textarea>
-      <span class="hint">Optional — but helpful for matching you with the right seeker.</span>
+      <span class="hint">Optional â€” but helpful for matching you with the right seeker.</span>
     </div>
 
     <!-- SUBMIT -->
+    <input type="text" name="website" id="website" style="display:none;position:absolute;left:-9999px" tabindex="-1" autocomplete="off" aria-hidden="true">
     <div class="submit-area">
       <button type="submit" class="submit-btn" id="submit-btn">
-        Register as a helper →
+        Register as a helper â†’
       </button>
       <p class="submit-note">Your profile will be reviewed by our team before being added to the matching pool.</p>
     </div>
@@ -537,12 +539,12 @@
 </div>
 
 <script>
-  // ── SET MIN DATE TO TODAY ──────────────────────────────────
+  // â”€â”€ SET MIN DATE TO TODAY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const today = new Date().toISOString().split('T')[0];
   const travelDateInput = document.getElementById('travel_date');
   if (travelDateInput) travelDateInput.setAttribute('min', today);
 
-  // ── TOGGLE FLIGHT SECTION ─────────────────────────────────
+  // â”€â”€ TOGGLE FLIGHT SECTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   function toggleFlight() {
     const body    = document.getElementById('flight-body');
     const chevron = document.getElementById('chevron');
@@ -550,7 +552,7 @@
     chevron.classList.toggle('open');
   }
 
-  // ── FORM SUBMISSION ───────────────────────────────────────
+  // â”€â”€ FORM SUBMISSION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   document.getElementById('helper-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -560,7 +562,7 @@
     banner.className = 'banner';
     banner.textContent = '';
 
-    // ── COLLECT FORM DATA ──────────────────────────────────
+    // â”€â”€ COLLECT FORM DATA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const data = {
       name:              document.getElementById('name').value.trim(),
       phone:             document.getElementById('phone').value.trim(),
@@ -581,7 +583,31 @@
     data.skills = [...document.querySelectorAll('input[name="skills"]:checked')]
       .map(cb => cb.value).join(', ');
 
-    // ── VALIDATION ─────────────────────────────────────────
+    // â”€â”€ VALIDATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // â”€â”€ PHONE FORMAT VALIDATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const phoneRaw = data.phone.replace(/[\s\-\(\)]/g, '');
+    const phoneDigits = phoneRaw.startsWith('+91') ? phoneRaw.slice(3)
+                      : phoneRaw.startsWith('91') && phoneRaw.length === 12 ? phoneRaw.slice(2)
+                      : phoneRaw.startsWith('0') && phoneRaw.length === 11  ? phoneRaw.slice(1)
+                      : phoneRaw;
+    if (!/^[6-9]\d{9}$/.test(phoneDigits)) {
+      banner.className = 'banner error';
+      banner.textContent = 'Please enter a valid 10-digit Indian mobile number (starting with 6-9).';
+      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // â”€â”€ EMAIL FORMAT VALIDATION (optional field) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    if (data.email) {
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email);
+      if (!emailOk) {
+        banner.className = 'banner error';
+        banner.textContent = 'Please enter a valid email address.';
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+    }
+
     const required = ['name', 'phone', 'age', 'based_at_airport'];
     const missing  = required.filter(f => !data[f]);
 
@@ -592,9 +618,9 @@
       return;
     }
 
-    // ── SUBMIT TO FLASK API ────────────────────────────────
+    // â”€â”€ SUBMIT TO FLASK API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     btn.disabled    = true;
-    btn.textContent = 'Submitting…';
+    btn.textContent = 'Submittingâ€¦';
 
     try {
       const res = await fetch('/api/register/helper', {
@@ -614,7 +640,7 @@
         banner.textContent = result.error || 'Something went wrong. Please try again.';
         banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
         btn.disabled    = false;
-        btn.textContent = 'Register as a helper →';
+        btn.textContent = 'Register as a helper â†’';
       }
 
     } catch (err) {
@@ -622,7 +648,7 @@
       banner.textContent = 'Could not connect to the server. Please check your connection and try again.';
       banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
       btn.disabled    = false;
-      btn.textContent = 'Register as a helper →';
+      btn.textContent = 'Register as a helper â†’';
     }
   });
 </script>
