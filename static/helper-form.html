@@ -70,7 +70,7 @@
     }
 
     .form-hero::before {
-      content: '\1F91D';
+      content: '';
       position: absolute;
       font-size: 12rem;
       opacity: 0.06;
@@ -371,7 +371,18 @@
     /* Logo image alongside wordmark */
     .logo { display: inline-flex; align-items: center; }
     .brand-logo { height: 2.5rem; width: auto; flex-shrink: 0; margin-right: 0.3rem; }
-  </style>
+      .hero-glyph {
+      position: absolute;
+      font-size: 12rem;
+      opacity: 0.12;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+    }
+</style>
 </head>
 <body>
 
@@ -380,7 +391,7 @@
   <a href="/index.html" class="back-link"> Back to home</a>
 </header>
 
-<div class="form-hero">
+<div class="form-hero"><span class="hero-glyph" aria-hidden="true">&#x1F91D;</span>
   <h1>I want to help</h1>
   <p>Register as a volunteer helper and we'll match you with a solo traveller who needs your support.</p>
 </div>
