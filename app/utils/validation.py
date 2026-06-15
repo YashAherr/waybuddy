@@ -39,7 +39,7 @@ def validate_email(email):
         return False, 'Please enter a valid email address.'
     domain = email.split('@')[1].lower()
     if domain in DISPOSABLE_DOMAINS:
-        return False, 'Please use a real email address â€” temporary or disposable emails are not allowed.'
+        return False, 'Please use a real email address - temporary or disposable emails are not allowed.'
     return True, None
 
 def check_duplicate(model, db_session, phone, email):
