@@ -25,10 +25,12 @@ def create_app():
     from .routes.register import register_bp
     from .routes.admin import admin_bp
     from .routes.notify import notify_bp
+    from .routes.payment import payment_bp
 
     app.register_blueprint(register_bp, url_prefix='/api')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(notify_bp, url_prefix='/api')
+    app.register_blueprint(payment_bp, url_prefix='/api')
 
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'changeme')

@@ -15,10 +15,12 @@
 #    5. Return JSON confirming success or describing the error
 # ============================================================
 
+import os
 from flask    import Blueprint, request, jsonify
-from ..models import db, Seeker, Helper
+from ..models import db, Seeker, Helper, Payment
 from datetime import datetime
 from app.utils.validation import validate_indian_phone, validate_email, check_duplicate
+from app.utils.payment import is_payment_required, create_order
 
 register_bp = Blueprint('register', __name__)
 
@@ -104,11 +106,33 @@ def register_seeker():
         db.session.add(seeker)
         db.session.commit()
 
-        return jsonify({
+        response = {
             'success': True,
             'message': 'Registration received. We will contact you before your travel date.',
             'seeker_id': seeker.id
-        }), 201
+        }
+
+        if is_payment_required():
+            order = create_order(str(seeker.id))
+            payment = Payment(
+                seeker_id          = seeker.id,
+                razorpay_order_id  = order['id'],
+                amount_paise       = order['amount'],
+                status             = 'created',
+            )
+            db.session.add(payment)
+            db.session.commit()
+
+            response['payment_required'] = True
+            response['order_id'] = order['id']
+            response['key_id'] = os.environ.get('RAZORPAY_KEY_ID')
+            response['amount'] = order['amount']
+        else:
+            seeker.is_paid = True
+            db.session.commit()
+            response['payment_required'] = False
+
+        return jsonify(response), 201
 
     except Exception as e:
         db.session.rollback()
