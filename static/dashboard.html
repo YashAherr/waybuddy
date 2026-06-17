@@ -485,8 +485,8 @@ async function loadAllSeekers(){
   var data=await res.json();
   var seekers=data.seekers||[];
   if(!seekers.length){el.innerHTML='<div class="empty">No seekers found.</div>';return;}
-  el.innerHTML='<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Flight</th><th>Route</th><th>Date</th><th>Help Needed</th><th>Status</th></tr></thead><tbody>'+
-    seekers.map(function(s){return'<tr><td>'+s.id+'</td><td>'+s.name+'</td><td>'+s.phone+'</td><td>'+(s.flight_number||'')+'</td><td>'+(s.departure_airport||'')+' &rarr; '+(s.arrival_airport||'')+'</td><td>'+(s.travel_date||'')+'</td><td>'+(Array.isArray(s.help_needed)?s.help_needed.join(', '):(s.help_needed||''))+'</td><td><span class="status-pill">'+s.status+'</span></td></tr>';}).join('')+
+  el.innerHTML='<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Flight</th><th>Route</th><th>Date</th><th>Status</th><th>Help Needed</th><th>Delete</th></tr></thead><tbody>'+
+    seekers.map(function(s){return'<tr><td>'+s.id+'</td><td>'+s.name+'</td><td>'+s.phone+'</td><td>'+(s.flight_number||'')+'</td><td>'+(s.departure_airport||'')+' &rarr; '+(s.arrival_airport||'')+'</td><td>'+(s.travel_date||'')+'</td><td><span class="status-pill">'+s.status+'</span></td><td>'+(Array.isArray(s.help_needed)?s.help_needed.join(', '):(s.help_needed||''))+'</td><td><button onclick="deleteSeeker('+s.id+')" style="background:var(--red);color:#fff;border:none;padding:0.3rem 0.75rem;border-radius:4px;font-size:0.75rem;cursor:pointer;">Delete</button></td></tr>';}).join('')+
     '</tbody></table>';
 }
 
@@ -499,8 +499,8 @@ async function loadAllHelpers(){
   var data=await res.json();
   var helpers=data.helpers||[];
   if(!helpers.length){el.innerHTML='<div class="empty">No helpers found.</div>';return;}
-  el.innerHTML='<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Based At</th><th>Languages</th><th>Skills</th><th>Status</th><th>Action</th></tr></thead><tbody>'+
-    helpers.map(function(h){return'<tr><td>'+h.id+'</td><td>'+h.name+'</td><td>'+h.phone+'</td><td>'+(h.based_at_airport||'&mdash;')+'</td><td>'+(Array.isArray(h.languages)?h.languages.join(', '):(h.languages||''))+'</td><td>'+(Array.isArray(h.skills)?h.skills.join(', '):(h.skills||''))+'</td><td><span class="status-pill">'+h.status+'</span></td><td>'+(h.status==='pending_approval'?'<button onclick="approveHelper('+h.id+',this)" style="background:var(--sage);color:#fff;border:none;padding:0.3rem 0.75rem;border-radius:4px;font-size:0.75rem;cursor:pointer;">Approve</button>':'&mdash;')+'</td></tr>';}).join('')+
+  el.innerHTML='<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Based At</th><th>Languages</th><th>Skills</th><th>Status</th><th>Action</th><th>Delete</th></tr></thead><tbody>'+
+    helpers.map(function(h){return'<tr><td>'+h.id+'</td><td>'+h.name+'</td><td>'+h.phone+'</td><td>'+(h.based_at_airport||'&mdash;')+'</td><td>'+(Array.isArray(h.languages)?h.languages.join(', '):(h.languages||''))+'</td><td>'+(Array.isArray(h.skills)?h.skills.join(', '):(h.skills||''))+'</td><td><span class="status-pill">'+h.status+'</span></td><td>'+(h.status==='pending_approval'?'<button onclick="approveHelper('+h.id+',this)" style="background:var(--sage);color:#fff;border:none;padding:0.3rem 0.75rem;border-radius:4px;font-size:0.75rem;cursor:pointer;">Approve</button>':'&mdash;')+'</td><td><button onclick="deleteHelper('+h.id+')" style="background:var(--red);color:#fff;border:none;padding:0.3rem 0.75rem;border-radius:4px;font-size:0.75rem;cursor:pointer;">Delete</button></td></tr>';}).join('')+
     '</tbody></table>';
 }
 
@@ -530,7 +530,7 @@ async function loadNotifications(){
   var matches=(data.matches||[]).filter(function(m){return m.notified_at;});
   if(!matches.length){el.innerHTML='<div class="empty">No notifications sent yet.</div>';return;}
   el.innerHTML='<table class="data-table"><thead><tr><th>Match ID</th><th>Seeker</th><th>Helper</th><th>Notified At</th></tr></thead><tbody>'+
-    matches.map(function(m){return'<tr><td>'+m.id+'</td><td>'+(m.seeker_name||m.seeker_id)+'</td><td>'+(m.helper_name||m.helper_id)+'</td><td>'+new Date(m.notified_at).toLocaleString()+'</td></tr>';}).join('')+
+    matches.map(function(m){return'<tr><td>'+m.id+'</td><td>'+(m.seeker_name||m.seeker_id)+'</td><td>'+(m.helper_name||m.helper_id)+'</td><td>'+new Date(m.notified_at).toLocaleString()+'</td><td><button onclick="deleteHelper('+h.id+')" style="background:var(--red);color:#fff;border:none;padding:0.3rem 0.75rem;border-radius:4px;font-size:0.75rem;cursor:pointer;">Delete</button></td></tr>';}).join('')+
     '</tbody></table>';
 }
 
@@ -557,6 +557,21 @@ function showToast(msg){
 
 fetchData();
 fetchPendingHelpers();
+
+  async function deleteSeeker(id) {
+    if (!confirm('Permanently delete this seeker? This cannot be undone.')) return;
+    const res = await fetch('/api/admin/seeker/' + id, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) { showToast('Seeker deleted.'); loadAllSeekers(); fetchData(); }
+    else { alert('Error: ' + data.error); }
+  }
+  async function deleteHelper(id) {
+    if (!confirm('Permanently delete this helper? This cannot be undone.')) return;
+    const res = await fetch('/api/admin/helper/' + id, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) { showToast('Helper deleted.'); loadAllHelpers(); fetchData(); }
+    else { alert('Error: ' + data.error); }
+  }
 </script>
 </body>
 </html>

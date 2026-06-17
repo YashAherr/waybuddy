@@ -268,3 +268,49 @@ def get_matches():
         'matches': [m.to_dict() for m in matches],
         'count':   len(matches)
     }), 200
+
+
+# ── DELETE /api/admin/seeker/<id> ────────────────────────────
+
+@admin_bp.route('/seeker/<int:seeker_id>', methods=['DELETE'])
+@admin_required
+def delete_seeker(seeker_id):
+    seeker = Seeker.query.get(seeker_id)
+    if not seeker:
+        return jsonify({'success': False, 'error': 'Seeker not found'}), 404
+    try:
+        match = Match.query.filter_by(seeker_id=seeker_id).first()
+        if match:
+            helper = Helper.query.get(match.helper_id)
+            if helper:
+                helper.status = 'approved'
+            db.session.delete(match)
+        db.session.delete(seeker)
+        db.session.commit()
+        return jsonify({'success': True, 'message': f'Seeker {seeker_id} deleted'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+# ── DELETE /api/admin/helper/<id> ────────────────────────────
+
+@admin_bp.route('/helper/<int:helper_id>', methods=['DELETE'])
+@admin_required
+def delete_helper(helper_id):
+    helper = Helper.query.get(helper_id)
+    if not helper:
+        return jsonify({'success': False, 'error': 'Helper not found'}), 404
+    try:
+        match = Match.query.filter_by(helper_id=helper_id).first()
+        if match:
+            seeker = Seeker.query.get(match.seeker_id)
+            if seeker:
+                seeker.status = 'approved'
+            db.session.delete(match)
+        db.session.delete(helper)
+        db.session.commit()
+        return jsonify({'success': True, 'message': f'Helper {helper_id} deleted'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
