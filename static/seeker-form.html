@@ -10,6 +10,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
   <link rel="manifest" href="/favicon/site.webmanifest">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -584,18 +585,56 @@
 
       const result = await res.json();
 
-      if (result.success) {
-        // Show success screen, hide form
-        document.getElementById('seeker-form').style.display = 'none';
-        document.getElementById('success-screen').classList.add('show');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
+      if (!result.success) {
         banner.className = 'banner error';
         banner.textContent = result.error || 'Something went wrong. Please try again.';
         banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
         btn.disabled    = false;
         btn.textContent = 'Submit my request ';
+        return;
       }
+
+      if (!result.payment_required) {
+        document.getElementById('seeker-form').style.display = 'none';
+        document.getElementById('success-screen').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      const options = {
+        key:      result.key_id,
+        amount:   result.amount,
+        currency: 'INR',
+        name:     'WayBuddy',
+        description: 'Seeker service fee',
+        order_id: result.order_id,
+        handler: function (response) {
+          document.getElementById('seeker-form').style.display = 'none';
+          document.getElementById('success-screen').classList.add('show');
+          const successScreen = document.getElementById('success-screen');
+          const confirmingNote = document.createElement('p');
+          confirmingNote.className = 'submit-note';
+          confirmingNote.style.marginTop = '0.75rem';
+          confirmingNote.textContent = 'Payment received  we are confirming it now. This usually takes a few seconds.';
+          successScreen.appendChild(confirmingNote);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        modal: {
+          ondismiss: function () {
+            banner.className = 'banner error';
+            banner.textContent = 'Payment was not completed. Please try again to finish your registration.';
+            banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            btn.disabled    = false;
+            btn.textContent = 'Submit my request ';
+          }
+        },
+        theme: {
+          color: '#C4603A'
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
 
     } catch (err) {
       banner.className = 'banner error';
